@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button id="menuToggleBtn" class="menu-toggle-btn">&#9776;</button>
+  <div class="index-Menu" id="indexMenu">
+    <div id="admin-menu-root"></div>
+    <script type="text/babel">
+      function ViewTaxis() {
+        return <div><h2>Taxi List</h2><p>Display all taxis here.</p></div>;
+      }
+      function ViewDrivers() {
+        return <div><h2>Driver List</h2><p>Display all drivers here.</p></div>;
+      }
+      function ViewBookings() {
+        return <div><h2>Bookings</h2><p>Display all bookings here.</p></div>;
+      }
+      function ViewFeedback() {
+        return <div><h2>Feedback</h2><p>Display all feedback here.</p></div>;
+      }
+      function Logout() {
+        window.location.href = "index.html";
+        return null;
+      }
+
+      function AdminMenu() {
+        const [page, setPage] = React.useState("home");
+        let content = null;
+        switch(page) {
+          case "taxis": content = <ViewTaxis />; break;
+          case "drivers": content = <ViewDrivers />; break;
+          case "bookings": content = <ViewBookings />; break;
+          case "feedback": content = <ViewFeedback />; break;
+          case "logout": content = <Logout />; break;
+          default: content = <div><p>Select an option from the menu.</p></div>;
+        }
+        return (
+          <div>
+            <ul>
+              <li><button onClick={() => setPage("taxis")}>View Taxis</button></li>
+              <li><button onClick={() => setPage("drivers")}>View Drivers</button></li>
+              <li><button onClick={() => setPage("bookings")}>View Bookings</button></li>
+              <li><button onClick={() => setPage("feedback")}>View Feedback</button></li>
+              <li><button onClick={() => setPage("logout")}>Logout</button></li>
+            </ul>
+            <div>{content}</div>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<AdminMenu />, document.getElementById('admin-menu-root'));
+    </script>
+    <!-- Add these CDN links in your <head> if not already present: -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  </div>
+
+  <div class="profile-container">
+    <div class="greeting-responsive">
+      <h1 id="greeting"></h1>
+    </div>
+    <div class="logo-blend-bg">
+      <img id="profilePic" src="mageza-logo.png" alt="Mageza Logo" class="logo-blend-img" />
+    </div>
+    <button class="modern-btn" onclick="document.getElementById('profileUpload').click()">Change Picture</button>
+    <input type="file" id="profileUpload" style="display:none" accept="image/*" onchange="changeProfilePic(event)">
+  </div>
+
+  <div class="profile-container">
+    <div id="map-sim" class="admin-map map-rounded"></div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script>
+    // Initialize Leaflet map for admin
+    document.addEventListener('DOMContentLoaded', function() {
+      var map = L.map('map-sim', {
+        zoomControl: true,
+        attributionControl: true
+      }).setView([-26.2041, 28.0473], 12); // Johannesburg default
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+      window.leafletMap = map;
+    });
+  </script>
+
+  <div id="divForAdminDetails">
+    <button id="view-admin-details" class="modern-btn">View Admin Details</button>
+    <button id="edit-admin-details" class="modern-btn">Edit Admin Details</button>
+    <p id="admin-details"></p>
+    <form id="register-driver">
+      <h2>Register Driver</h2>
+      <input class="modal-input" type="text" id="driverName" placeholder="Driver Name" required>
+      <input class="modal-input" type="text" id="driverContacts" placeholder="Driver Contacts" required>
+      <input class="modal-input" type="text" id="driverLicense" placeholder="Vehicle Number" required>
+      <button type="submit" class="modern-btn">Register Driver</button>
+      <p id="driver-error-message" class="error-message"></p>
+    </form>
+  </div>
+
+  <script>
+    // Toggle slide menu
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuBtn = document.getElementById('menuToggleBtn');
+      const menu = document.getElementById('indexMenu');
+      if (menuBtn && menu) {
+        menuBtn.addEventListener('click', function () {
+          menu.classList.toggle('menu-open');
+        });
+      }
+    });
+
+    // Profile picture upload logic
+    function changeProfilePic(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profilePic').src = e.target.result;
+          // Send profile image to backend
+          fetch('http://localhost:5000/api/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: e.target.result })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success){
+              console.log('Profile picture saved!');
+            }
+          })
+          .catch(err => console.error('Error saving profile:', err));
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Responsive greeting with typing effect
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return 'Good morning, Admin!';
+      if (hour < 18) return 'Good afternoon, Admin!';
+      return 'Good evening, Admin!';
+    }
+    function typeGreeting(text, elementId, speed = 60) {
+      const el = document.getElementById(elementId);
+      el.textContent = '';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+    typeGreeting(getGreeting(), 'greeting');
+
+    // Admin details demo logic
+    const adminDetails = {
+      name: "James Ndlangamandla",
+      email: "admin@mageza.com",
+      phone: "+27 123 456 789"
+    };
+    document.getElementById('view-admin-details').onclick = function() {
+      document.getElementById('admin-details').textContent =
+        `Name: ${adminDetails.name}, Email: ${adminDetails.email}, Phone: ${adminDetails.phone}`;
+    };
+    document.getElementById('edit-admin-details').onclick = function() {
+      prompt("Edit functionality coming soon!");
+    };
+    document.getElementById('delete-admin-details').onclick = function() {
+      if (confirm("Are you sure you want to delete admin details?")) {
+        document.getElementById('admin-details').textContent = "Admin details deleted.";
+      }
+    };
+
+    // Register driver logic (localStorage demo)
+    document.getElementById('register-driver').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('driverName').value.trim();
+      const contacts = document.getElementById('driverContacts').value.trim();
+      const license = document.getElementById('driverLicense').value.trim();
+      if (!name || !contacts || !license) {
+        document.getElementById('driver-error-message').textContent = "All fields are required.";
+        return;
+      }
+      let drivers = JSON.parse(localStorage.getItem('magezaDrivers') || '[]');
+      drivers.push({ name, contacts, license });
+      localStorage.setItem('magezaDrivers', JSON.stringify(drivers));
+      document.getElementById('driver-error-message').textContent = "Driver registered!";
+      this.reset();
+    });
+  </script>
+
+  <footer>
+    <p>&copy; 2025 Mageza App. All rights reserved.</p>
+    <p>Developed by the Mageza team.</p>
+  </footer>
+</body>
+</html>

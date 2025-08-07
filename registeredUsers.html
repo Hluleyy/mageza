@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+      <div id="registeredUsersContainer">
+    <h3>Registered Users</h3>
+    <div id="registeredUsers" class="registered-users-list"></div>
+  </div>
+  <script>
+    // Load users from localStorage and display
+    function displayRegisteredUsers() {
+      let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+      const container = document.getElementById('registeredUsers');
+      if (users.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:#888;">No users registered yet.</p>';
+        return;
+      }
+      let html = '';
+      users.forEach(u => {
+        html += `<div class="user-profile-card">
+          <div class="user-avatar">${u.name ? u.name.charAt(0).toUpperCase() : '?'}</div>
+          <div class="user-info">
+            <div class="user-type">${u.userType}</div>
+            <div class="user-name">${u.name}</div>
+            <div class="user-email">${u.contacts}</div>
+            <div class="user-phone">${u.phone ? u.phone : ''}</div>
+            ${u.vehicle ? `<div class="user-vehicle">Vehicle: ${u.vehicle}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+    displayRegisteredUsers();
+  </script>
+</body>
+</html>
