@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Que Marshall Profile - Mageza App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'mageza-blue': '#1976d2',
+            'mageza-light-blue': '#42a5f5',
+            'mageza-bg': '#e3f0fc',
+            'mageza-dark': '#0d1a36',
+            'mageza-green': '#00e676',
+            'mageza-yellow': '#ffd600',
+            'mageza-purple': '#9c27b0',
+            'mageza-orange': '#ff9800',
+          },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.8s cubic-bezier(.39,.575,.56,1.000)',
+            'pop-in': 'popIn 1.2s cubic-bezier(.39,.575,.56,1.000)',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(40px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            popIn: {
+              '0%': { opacity: '0', transform: 'scale(0.8)' },
+              '80%': { opacity: '1', transform: 'scale(1.05)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var map = L.map('map').setView([-26.2041, 28.0473], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+      window.leafletMap = map;
+    });
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-mageza-blue to-mageza-light-blue font-sans">
+  <main class="flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl animate-fade-in-up">
+      <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-10">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <h1 id="greeting" class="text-3xl md:text-4xl font-bold text-mageza-blue mb-4"></h1>
+          <p class="text-gray-600 text-lg">Monitor queues, manage taxi dispatch, and communicate with drivers here.</p>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="flex flex-col items-center mb-8">
+          <div class="w-32 h-32 rounded-full bg-gradient-to-br from-mageza-blue to-mageza-light-blue flex items-center justify-center mb-4 shadow-lg">
+            <img id="profilePic" src="mageza-logo.png" alt="Que Marshall" class="w-28 h-28 rounded-full object-cover">
+          </div>
+          <h2 class="text-2xl font-bold text-mageza-blue mb-2">Que Marshall</h2>
+          <p class="text-gray-600">Taxi Queue Manager</p>
+        </div>
+
+        <!-- Profile Picture Upload -->
+        <div class="text-center mb-8">
+          <button onclick="document.getElementById('profileUpload').click()" 
+            class="bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white px-6 py-3 rounded-xl font-semibold hover:from-mageza-light-blue hover:to-mageza-blue transition-all duration-200 shadow-lg">
+            Change Picture
+          </button>
+          <input type="file" id="profileUpload" class="hidden" accept="image/*" onchange="changeProfilePic(event)">
+        </div>
+
+        <!-- Map Section -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-mageza-blue mb-4 text-center">Live Queue Monitoring</h2>
+          <div id="map" class="w-full h-96 rounded-2xl border border-gray-300 shadow-lg"></div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <!-- Monitor Queues -->
+          <a href="#" 
+            class="group bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <div class="flex items-center justify-center mb-4">
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-center mb-2">Monitor Queues</h3>
+            <p class="text-sm text-center opacity-90">Track taxi queues in real-time</p>
+          </a>
+
+          <!-- Dispatch Taxis -->
+          <a href="#" 
+            class="group bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <div class="flex items-center justify-center mb-4">
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-center mb-2">Dispatch Taxis</h3>
+            <p class="text-sm text-center opacity-90">Manage taxi assignments</p>
+          </a>
+
+          <!-- Communication -->
+          <a href="#" 
+            class="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <div class="flex items-center justify-center mb-4">
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-center mb-2">Communication</h3>
+            <p class="text-sm text-center opacity-90">Chat with drivers & dispatch</p>
+          </a>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div class="bg-gradient-to-br from-green-100 to-green-200 p-4 rounded-xl text-center">
+            <h3 class="text-2xl font-bold text-green-600">24</h3>
+            <p class="text-green-700">Active Queues</p>
+          </div>
+          <div class="bg-gradient-to-br from-yellow-100 to-yellow-200 p-4 rounded-xl text-center">
+            <h3 class="text-2xl font-bold text-yellow-600">156</h3>
+            <p class="text-yellow-700">Taxis Dispatched</p>
+          </div>
+          <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-4 rounded-xl text-center">
+            <h3 class="text-2xl font-bold text-blue-600">89</h3>
+            <p class="text-blue-700">Active Drivers</p>
+          </div>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="text-center">
+          <button onclick="window.location.href='index.html'" 
+            class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white py-8 px-4 mt-auto">
+    <div class="max-w-6xl mx-auto text-center">
+      <p class="mb-2">&copy; 2025 Mageza App. All rights reserved.</p>
+      <p>Developed by the Mageza team.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Profile picture upload functionality
+    function changeProfilePic(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profilePic').src = e.target.result;
+          // Send profile image to backend
+          fetch('http://localhost:5000/api/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: e.target.result })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success){
+              console.log('Profile picture saved!');
+            }
+          })
+          .catch(err => console.error('Error saving profile:', err));
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Responsive greeting
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return 'Good morning, Que Marshall!';
+      if (hour < 18) return 'Good afternoon, Que Marshall!';
+      return 'Good evening, Que Marshall!';
+    }
+    document.getElementById('greeting').textContent = getGreeting();
+  </script>
+</body>
+</html>
