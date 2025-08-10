@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
+  <script>window.LogRocket && window.LogRocket.init('upn2x5/mageza');</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mageza App</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var map = L.map('map').setView([-26.2041, 28.0473], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+      window.leafletMap = map;
+    });
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-mageza-dark via-mageza-blue to-mageza-light-blue font-sans">
+  <!-- Splash Screen -->
+  <div id="splash" class="fixed inset-0 bg-gradient-to-br from-mageza-dark via-mageza-blue to-mageza-light-blue flex flex-col items-center justify-center z-50 transition-opacity duration-500 p-6 gap-8">
+    <img src="mageza-logo.png" alt="Mageza Logo" class="w-32 h-32 md:w-44 md:h-44 rounded-3xl bg-white/20 p-6 border-4 border-white outline outline-4 outline-mageza-light-blue outline-offset-[-8px] object-contain animate-pulse" />
+    <h6 class="text-white/90 font-sans text-lg md:text-xl font-medium tracking-wider uppercase text-center">FAST &nbsp; SAFE &nbsp; LOCAL</h6>
+  </div>
+
+  <!-- Background Logo -->
+  <div class="fixed inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
+    <img src="mageza-logo.png" alt="Mageza Logo" class="w-48 h-48 md:w-64 md:h-64 object-contain grayscale brightness-110" />
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-md animate-fade-in-up">
+      <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-10">
+        <!-- Profile Picture -->
+        <div class="flex justify-center mb-6">
+          <img src="mageza-logo.png" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-mageza-blue shadow-lg object-cover" />
+        </div>
+
+        <!-- Greeting -->
+        <div class="text-center mb-6">
+          <h1 class="text-3xl md:text-4xl font-bold text-mageza-blue mb-2">Welcome to Mageza</h1>
+          <p class="text-gray-600 text-sm md:text-base">A local taxi route assistant to help you find your way, quickly and easily.</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="logIn-Form" class="space-y-4">
+          <select id="userType" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200 bg-white/80 backdrop-blur-sm">
+            <option>Admin</option>
+            <option>Driver</option>
+            <option>Passenger</option>
+            <option>Que Marshall</option>
+          </select>
+
+          <input type="text" id="contacts" placeholder="Email address" required 
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200 bg-white/80 backdrop-blur-sm" />
+
+          <input type="password" id="password" placeholder="Password" required 
+            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200 bg-white/80 backdrop-blur-sm" />
+
+          <button type="submit" 
+            class="w-full bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white py-3 px-6 rounded-xl font-semibold hover:from-mageza-light-blue hover:to-mageza-blue transition-all duration-200 transform hover:scale-105 shadow-lg">
+            <span class="flex items-center justify-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 10.5L9 13.5L14 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Log In
+            </span>
+          </button>
+
+          <p id="errorMessage" class="text-red-500 text-sm text-center"></p>
+        </form>
+
+        <!-- Map Container for Leaflet -->
+        <div id="map" class="w-full h-64 rounded-lg mt-6 shadow-lg"></div>
+
+        <div class="text-center mt-4">
+          <a href="#" id="showRegister" class="text-mageza-blue hover:text-mageza-light-blue transition-colors duration-200">Register</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white py-8 px-4">
+    <div class="max-w-6xl mx-auto text-center">
+      <p class="mb-2">&copy; 2025 Mageza App. All rights reserved.</p>
+      <p>Developed by the Mageza team.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    // Splash screen logic
+    window.addEventListener('DOMContentLoaded', function() {
+      const splash = document.getElementById('splash');
+      setTimeout(function() {
+        splash.style.opacity = '0';
+        setTimeout(function() {
+          splash.style.display = 'none';
+        }, 500);
+      }, 1800);
+    });
+
+    // Registration form logic
+    document.getElementById('showRegister').onclick = function(e) {
+      e.preventDefault();
+      alert('Registration functionality would be implemented here');
+    };
+
+    document.getElementById('logIn-Form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userType = document.getElementById('userType').value;
+      const contacts = document.getElementById('contacts').value.trim();
+      const password = document.getElementById('password').value;
+      
+      // Simple validation
+      if (!contacts || !password) {
+        document.getElementById('errorMessage').textContent = 'Please fill all fields.';
+        return;
+      }
+      
+      // Redirect based on user type
+      const profilePage = userType.toLowerCase().replace(' ', '_') + '.html';
+      window.location.href = profilePage;
+    });
+  </script>
+</body>
+</html>
