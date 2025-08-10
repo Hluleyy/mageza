@@ -1,0 +1,14 @@
+{
+  "name": "mageza",
+  "version": "1.0.0",
+  "description": "a local taxi app that assists drivers and passengers interact easy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "James Ndlangamandla",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
