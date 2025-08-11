@@ -36,16 +36,6 @@
   </script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var map = L.map('map').setView([-26.2041, 28.0473], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-      window.leafletMap = map;
-    });
-  </script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-mageza-blue to-mageza-light-blue font-sans">
   <main class="flex-1 flex items-center justify-center p-4">
@@ -59,29 +49,29 @@
 
         <!-- Navigation Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <a href="routes-frequent-sujgestions.html" 
+          <button onclick="openDriverModal('schedule')" 
             class="group bg-gradient-to-br from-mageza-blue to-mageza-light-blue text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
             <div class="flex items-center justify-center mb-4">
               <img src="route.png" alt="Routes" class="w-12 h-12 object-contain"/>
             </div>
             <h3 class="text-lg font-semibold text-center">My Routes</h3>
-          </a>
+          </button>
 
-          <a href="dvr-start-work.html" 
+          <button onclick="openDriverModal('schedule')"
             class="group bg-gradient-to-br from-mageza-blue to-mageza-light-blue text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
             <div class="flex items-center justify-center mb-4">
               <img src="schedule.png" alt="Schedule" class="w-12 h-12 object-contain"/>
             </div>
             <h3 class="text-lg font-semibold text-center">Schedule</h3>
-          </a>
+          </button>
 
-          <a href="driver-spaces.html" 
+          <button onclick="openDriverModal('earnings')"
             class="group bg-gradient-to-br from-mageza-blue to-mageza-light-blue text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
             <div class="flex items-center justify-center mb-4">
               <img src="passenger.png" alt="Driver Spaces" class="w-12 h-12 object-contain"/>
             </div>
             <h3 class="text-lg font-semibold text-center">Driver Spaces</h3>
-          </a>
+          </button>
         </div>
 
         <!-- Map Section -->
@@ -92,32 +82,32 @@
 
         <!-- Control Buttons -->
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-          <button id="simShowPassengers" 
+          <button onclick="openMapModal('passengers')" 
             class="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200">
             Show Passengers
           </button>
 
-          <button id="simShowInTaxis" 
+          <button onclick="openMapModal('inTaxi')"
             class="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200">
             Show In-Taxi Passengers
           </button>
 
-          <button id="simShowDriver" 
+          <button onclick="openMapModal('driver')"
             class="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-purple-600 hover:to-purple-700 transition-all duration-200">
             Show Driver
           </button>
 
-          <button id="simPickup" 
+          <button onclick="openMapModal('pickup')"
             class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200">
             Pick Up Nearby
           </button>
 
-          <button id="simShowRequests" 
+          <button onclick="openMapModal('requests')"
             class="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all duration-200">
             Show Requests
           </button>
 
-          <button id="simAcceptRequest" 
+          <button onclick="openMapModal('accept')"
             class="bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200">
             Accept Request
           </button>
@@ -142,7 +132,7 @@
 
         <!-- Logout Button -->
         <div class="text-center mt-8">
-          <button onclick="window.location.href='index.html'" 
+          <button onclick="openLogoutModal()" 
             class="bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200">
             Logout
           </button>
@@ -159,9 +149,137 @@
     </div>
   </footer>
 
+  <!-- Modals -->
+  <div id="driverScheduleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-mageza-blue">Driver Schedule Management</h3>
+        <button onclick="closeModal('driverScheduleModal')" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Start Time</label>
+          <input type="time" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">End Time</label>
+          <input type="time" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Working Days</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Mon</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Tue</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Wed</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Thu</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Fri</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Sat</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-1"> Sun</label>
+          </div>
+        </div>
+        <button class="w-full bg-mageza-blue text-white py-2 px-4 rounded-lg hover:bg-mageza-dark">Save Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="driverEarningsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-mageza-blue">Driver Earnings</h3>
+        <button onclick="closeModal('driverEarningsModal')" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="bg-green-50 p-4 rounded-lg">
+          <h4 class="text-lg font-semibold text-green-800">Today's Earnings</h4>
+          <p class="text-2xl font-bold text-green-600">R1,250.00</p>
+          <p class="text-sm text-green-700">12 trips completed</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <h4 class="text-lg font-semibold text-blue-800">This Week</h4>
+          <p class="text-2xl font-bold text-blue-600">R8,750.00</p>
+          <p class="text-sm text-blue-700">84 trips completed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mapModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-mageza-blue">Map Controls</h3>
+        <button onclick="closeModal('mapModal')" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h4 class="font-semibold mb-2">Map Features</h4>
+          <div class="space-y-2">
+            <label class="flex items-center"><input type="checkbox" class="mr-2" checked> Traffic Layer</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-2"> Satellite View</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-2"> Driver Locations</label>
+          </div>
+        </div>
+        <button class="w-full bg-mageza-blue text-white py-2 px-4 rounded-lg hover:bg-mageza-dark">Apply Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-mageza-blue">Confirm Logout</h3>
+        <button onclick="closeModal('logoutModal')" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <p class="text-gray-700 mb-4">Are you sure you want to logout?</p>
+      <div class="flex justify-end space-x-3">
+        <button onclick="closeModal('logoutModal')" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+        <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Logout</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <script>
-    // Simulation logic (same as original but with improved UI)
+    // Modal functions
+    function openDriverModal(type) {
+      if (type === 'schedule') {
+        document.getElementById('driverScheduleModal').classList.remove('hidden');
+      } else if (type === 'earnings') {
+        document.getElementById('driverEarningsModal').classList.remove('hidden');
+      }
+    }
+
+    function openMapModal(type) {
+      document.getElementById('mapModal').classList.remove('hidden');
+    }
+
+    function openLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    // Simulation logic
     const mapSim = document.getElementById('map-sim');
     let simMarkers = [];
     let passengers = [];
@@ -183,39 +301,6 @@
     function updateMapStatus(msg) {
       document.getElementById('mapStatus').textContent = msg;
     }
-
-    // All simulation functions remain the same but with improved UI feedback
-    document.getElementById('simShowPassengers').onclick = function() {
-      passengers = [];
-      for (let i = 0; i < 4; i++) {
-        const lat = -26.2041 + (Math.random() - 0.5) * 0.08;
-        const lng = 28.0473 + (Math.random() - 0.5) * 0.08;
-        passengers.push({ 
-          id: 'p'+i, 
-          lat, 
-          lng, 
-          lastLat: lat, 
-          lastLng: lng, 
-          lastMove: Date.now(), 
-          color: '#d32f2f', 
-          inTaxi: false 
-        });
-      }
-      redrawAll();
-      updateMapStatus('Passengers placed on map!');
-    };
-
-    document.getElementById('simShowDriver').onclick = function() {
-      if (!driver) {
-        driver = { lat: -26.2041, lng: 28.0473 };
-      }
-      redrawAll();
-      window.leafletMap.setView([driver.lat, driver.lng], window.leafletMap.getZoom());
-      updateMapStatus('Driver location shown!');
-    };
-
-    // Add remaining simulation functions...
-    // [Previous simulation functions would be included here]
 
     // Greeting with typing effect
     function getGreeting() {
