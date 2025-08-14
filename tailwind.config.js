@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "./index.html",
-    "./tailwind-*.html",
+    "./index*.html",
     "./*.html"
   ],
   theme: {
