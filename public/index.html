@@ -2,291 +2,470 @@
 <html lang="en">
 <head>
   <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
-  <script>window.LogRocket && window.LogRocket.init('upn2x5/mageza');</script>
+<script>window.LogRocket && window.LogRocket.init('upn2x5/mageza');</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mageza App</title>
-  <link rel="stylesheet" href="style.css">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'mageza-blue': '#1976d2',
-            'mageza-light-blue': '#42a5f5',
-            'mageza-bg': '#e3f0fc',
-            'mageza-dark': '#0d1a36',
-          },
-          animation: {
-            'fade-in-up': 'fadeInUp 0.8s cubic-bezier(.39,.575,.56,1.000)',
-            'pop-in': 'popIn 1.2s cubic-bezier(.39,.575,.56,1.000)',
-            'logo-bounce': 'logoBounce 2.2s cubic-bezier(.39,.575,.56,1.000) infinite alternate',
-            'splash-fade-in': 'splashFadeIn 1.1s cubic-bezier(.39,.575,.56,1.000)',
-          },
-          keyframes: {
-            fadeInUp: {
-              '0%': { opacity: '0', transform: 'translateY(40px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
-            },
-            popIn: {
-              '0%': { opacity: '0', transform: 'scale(0.8)' },
-              '80%': { opacity: '1', transform: 'scale(1.05)' },
-              '100%': { opacity: '1', transform: 'scale(1)' },
-            },
-            logoBounce: {
-              '0%': { transform: 'scale(1) rotate(0deg)' },
-              '40%': { transform: 'scale(1.08) rotate(-6deg)' },
-              '60%': { transform: 'scale(1.12) rotate(6deg)' },
-              '100%': { transform: 'scale(1.04) rotate(0deg)' },
-            },
-            splashFadeIn: {
-              '0%': { opacity: '0', transform: 'scale(0.98)' },
-              '100%': { opacity: '1', transform: 'scale(1)' },
-            },
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var map = L.map('map').setView([-26.2041, 28.0473], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-      window.leafletMap = map;
-    });
-  </script>
+      <link rel="stylesheet" href="../src/style.css">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-mageza-dark via-mageza-blue to-mageza-light-blue font-sans">
-  <!-- Splash Screen -->
-  <div id="splash" class="fixed inset-0 bg-gradient-to-br from-mageza-dark via-mageza-blue to-mageza-light-blue flex flex-col items-center justify-center z-50 transition-opacity duration-500 p-6 gap-8">
-    <img src="mageza-logo.png" alt="Mageza Logo" class="w-32 h-32 md:w-44 md:h-44 rounded-3xl bg-white/20 p-6 border-4 border-white outline outline-4 outline-mageza-light-blue outline-offset-[-8px] animate-logo-bounce object-contain" />
-    <h6 class="text-white/90 font-sans text-lg md:text-xl font-medium tracking-wider uppercase text-center">FAST &nbsp; SAFE &nbsp; LOCAL</h6>
+<body>
+  <div id="splash" class="splash-screen">
+  <img src="mageza-logo.png" alt="Mageza Logo" class="big-animated-logo" />
+  <h6>FAST &nbsp; SAFE &nbsp; LOCAL</h6>
+</div>
+  <div class="engraved-bg-logo">
+    <img src="mageza-logo.png" alt="Mageza Logo" />
   </div>
-
-  <!-- Background Logo -->
-  <div class="fixed inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
-    <img src="mageza-logo.png" alt="Mageza Logo" class="w-48 h-48 md:w-64 md:h-64 object-contain grayscale brightness-110" />
-  </div>
-
-  <!-- Main Content -->
-  <main class="flex-1 flex items-center justify-center p-4">
-    <div class="w-full max-w-md animate-fade-in-up">
-      <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-10">
-        <!-- Profile Picture -->
-        <div class="flex justify-center mb-6">
-          <img src="mageza-logo.png" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-mageza-blue shadow-lg object-cover" />
-        </div>
-
-        <!-- Greeting -->
-        <div class="text-center mb-6">
-          <h1 class="text-3xl md:text-4xl font-bold text-mageza-blue mb-2 animate-pop-in">Welcome to Mageza</h1>
-          <p class="text-gray-600 text-sm md:text-base">A local taxi route assistant to help you find your way, quickly and easily.</p>
-        </div>
-
-      <!-- Login Form -->
-      <form id="logIn-Form" class="indxInput">
-        <select id="userType" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200 bg-white/80 backdrop-blur-sm">
-          <option>Admin</option>
-          <option>Driver</option>
-          <option>Passenger</option>
-          <option>Que Marshall</option>
-        </select>
-
-        <input type="text" id="contacts" placeholder="Email address" required 
-          class="indxInput" />
-
-        <input type="password" id="password" placeholder="Password" required 
-          class="indxInput />
-
-        <button class="w-full bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white py-3 px-6 rounded-xl font-semibold hover:from-mageza-light-blue hover:to-mageza-blue transition-all duration-200 transform hover:scale-105 shadow-lg">
-          <span class="flex items-center justify-center gap-2">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-              <path d="M8 10h4m0 0l-2-2m2 2l-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Log In
-          </span>
-        </button>
-
-        <p id="errorMessage" class="text-red-500 text-sm text-center"></p>
-      </form>
-
-      <!-- Map Container for Leaflet -->
-      <div id="map" class="w-full h-64 rounded-lg mt-6 shadow-lg" style="min-height: 256px; position: relative;"></div>
-
-        <div class="text-center mt-4">
-          <a href="#" id="showRegister" class="text-mageza-blue hover:text-mageza-light-blue transition-colors duration-200">Register</a>
-        </div>
+  <div class="profile-container">
+    <div class="profile-pic-wrapper">
+      <img src="mageza-logo.png" alt="Profile Picture" />
+    </div>
+    <div class="greeting-responsive">
+      <h1>Welcome to Mageza</h1>
+    </div>
+    <p class="indx-text">A local taxi route assistant to help you find your way, quickly and easily.</p>
+    <form class="logIn-Form" id="logIn-Form">  
+      <select id="userType">
+        <option>Admin</option>
+        <option>Driver</option>
+        <option>Passenger</option>
+        <option>Que Marshall</option>
+      </select>
+      <input class="indxInput" type="text" id="contacts" placeholder="Email address" required>
+      <input class="indxInput" type="password" id="password" placeholder="Password" required>
+      <button class="modern-btn login-btn" type="submit" style="width:100%;margin-top:1em;font-size:1.1em;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:0.5em;">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;"><circle cx="10" cy="10" r="9" stroke="#fff" stroke-width="2"/><path d="M8 10h4m0 0l-2-2m2 2l-2 2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Log In
+      </button>
+      <p id="errorMessage" class="error-message"></p>
+    </form>
+    <div id="root" style="text-align:center;">
+      <a class="lwr-link" id="showRegister" href="#">Register</a>
+    </div>
+    <!-- Registration Modal -->
+    <div id="registrationModal" class="modal-overlay">
+      <div class="modal-content">
+        <h2 class="modal-title">Register</h2>
+        <form id="register-Form" class="modal-form">
+          <select id="regUserType" required onchange="toggleDriverFields()" class="modal-input">
+            <option value="">Select user type</option>
+            <option>Admin</option>
+            <option>Driver</option>
+            <option>Passenger</option>
+            <option>Que Marshall</option>
+          </select>
+          <input type="text" id="regName" placeholder="Full Name" required class="modal-input">
+          <input type="email" id="regContacts" placeholder="Email address" required class="modal-input">
+          <input type="password" id="regPassword" placeholder="Password" required class="modal-input">
+          <input type="tel" id="regPhone" placeholder="Phone Number" required class="modal-input">
+          <input type="text" id="regVehicle" placeholder="Vehicle Number (Drivers only)" style="display:none;" class="modal-input">
+          <div class="modal-btn-group">
+            <button class="modern-btn register-btn" type="submit">
+              <span style="display:inline-flex;align-items:center;gap:0.5em;">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;"><circle cx="10" cy="10" r="9" stroke="#fff" stroke-width="2"/><path d="M6 10.5L9 13.5L14 8.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Register
+              </span>
+            </button>
+            <button class="modern-btn cancel-btn" type="button" id="closeModal">
+              <span style="display:inline-flex;align-items:center;gap:0.5em;">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;"><circle cx="10" cy="10" r="9" stroke="#fff" stroke-width="2"/><path d="M7 7L13 13M13 7L7 13" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+                Cancel
+              </span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-  </main>
-
-  <!-- Registration Modal -->
-  <div id="registrationModal" class="fixed inset-0 bg-black/50 flex-items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 animate-fade-in-up">
-      <h2 class="text-2xl font-bold text-mageza-blue mb-6 text-center">Register</h2>
-      
-      <form id="register-Form" class="space-y-4">
-        <select id="regUserType" required onchange="toggleDriverFields()" 
-        >
-          <option value="">Select user type</option>
-          <option>Admin</option>
-          <option>Driver</option>
-          <option>Passenger</option>
-          <option>Que Marshall</option>
-        </select>
-
-        <input type="text" id="regName" placeholder="Full Name" required 
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200" />
-
-        <input type="email" id="regContacts" placeholder="Email address" required 
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200" />
-
-        <input type="password" id="regPassword" placeholder="Password" required 
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200" />
-
-        <input type="tel" id="regPhone" placeholder="Phone Number" required 
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200" />
-
-        <input type="text" id="regVehicle" placeholder="Vehicle Number (Drivers only)" style="display:none;" 
-          class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-mageza-blue focus:ring-2 focus:ring-mageza-blue/20 transition-all duration-200" />
-
-        <div class="flex gap-4">
-          <button type="submit" 
-            class="flex-1 bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white py-3 px-4 rounded-xl font-semibold hover:from-mageza-light-blue hover:to-mageza-blue transition-all duration-200">
-            <span class="flex items-center justify-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                <path d="M6 10.5L9 13.5L14 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Register
-            </span>
-          </button>
-
-          <button type="button" id="closeModal" 
-            class="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200">
-            <span class="flex items-center justify-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                <path d="M7 7L13 13M13 7L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              Cancel
-            </span>
-          </button>
-        </div>
-      </form>
-    </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="bg-gradient-to-r from-mageza-blue to-mageza-light-blue text-white py-8 px-4 mt-auto">
-    <div class="max-w-6xl mx-auto text-center">
-      <p class="mb-2">&copy; 2025 Mageza App. All rights reserved.</p>
-      <p>Developed by the Mageza team.</p>
-    </div>
-  </footer>
-
-  <script>
-    // Splash screen logic
-    window.addEventListener('DOMContentLoaded', function() {
-      const splash = document.getElementById('splash');
+ <script>
+  // Splash screen logic
+  window.addEventListener('DOMContentLoaded', function() {
+    const splash = document.getElementById('splash');
+    setTimeout(function() {
+      splash.style.opacity = '0';
       setTimeout(function() {
-        splash.style.opacity = '0';
-        setTimeout(function() {
-          splash.style.display = 'none';
-        }, 500);
-      }, 1800);
-    });
+        splash.style.display = 'none';
+      }, 500);
+    }, 1800); // Show splash for 1.8 seconds
+  });
 
-    // Show registration modal
-    document.getElementById('showRegister').onclick = function(e) {
-      e.preventDefault();
-      document.getElementById('registrationModal').classList.remove('hidden');
-      displayRegisteredUsers();
-    };
-    document.getElementById('closeModal').onclick = function() {
-      document.getElementById('registrationModal').classList.add('hidden');
-    };
+  // Show registration modal
+  document.getElementById('showRegister').onclick = function(e) {
+    e.preventDefault();
+    document.getElementById('registrationModal').style.display = 'flex';
+    displayRegisteredUsers();
+  };
+  document.getElementById('closeModal').onclick = function() {
+    document.getElementById('registrationModal').style.display = 'none';
+  };
 
-    // Registration form logic
-    function toggleDriverFields() {
-      const userType = document.getElementById('regUserType').value;
-      const vehicleField = document.getElementById('regVehicle');
-      if (userType === 'Driver') {
-        vehicleField.style.display = 'block';
-        vehicleField.required = true;
-      } else {
-        vehicleField.style.display = 'none';
-        vehicleField.required = false;
-      }
+
+  // Registration form logic
+  function toggleDriverFields() {
+    const userType = document.getElementById('regUserType').value;
+    const vehicleField = document.getElementById('regVehicle');
+    if (userType === 'Driver') {
+      vehicleField.style.display = '';
+      vehicleField.required = true;
+    } else {
+      vehicleField.style.display = 'none';
+      vehicleField.required = false;
     }
+  }
 
-    document.getElementById('register-Form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const userType = document.getElementById('regUserType').value;
-      const name = document.getElementById('regName').value.trim();
-      const contacts = document.getElementById('regContacts').value.trim();
-      const password = document.getElementById('regPassword').value;
-      const phone = document.getElementById('regPhone').value.trim();
-      const vehicle = document.getElementById('regVehicle').value.trim();
-      if (!userType || !name || !contacts || !password || !phone || (userType === 'Driver' && !vehicle)) {
-        alert('Please fill all fields.');
-        return;
-      }
-      let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
-      let userData = { userType, name, contacts, password, phone };
-      if (userType === 'Driver') userData.vehicle = vehicle;
-      users.push(userData);
-      localStorage.setItem('magezaUsers', JSON.stringify(users));
-      alert('Registration successful!');
-      displayRegisteredUsers();
-      document.getElementById('register-Form').reset();
-      toggleDriverFields();
-    });
-
-    document.getElementById('logIn-Form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const userType = document.getElementById('userType').value;
-      const contacts = document.getElementById('contacts').value.trim();
-      const password = document.getElementById('password').value;
-      let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
-      const user = users.find(u => u.userType === userType && u.contacts === contacts && u.password === password);
-      if (user) {
-        let profilePage = userType.toLowerCase().replace(' ', '_') + '.html';
-        window.location.href = profilePage;
-      } else {
-        document.getElementById('errorMessage').textContent = 'Invalid credentials or user not registered.';
-      }
-    });
-
-    function displayRegisteredUsers() {
-      let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
-      const container = document.getElementById('registeredUsers');
-      if (users.length === 0) {
-        container.innerHTML = '<p class="text-center text-gray-500">No users registered yet.</p>';
-        return;
-      }
-      let html = '';
-      users.forEach(u => {
-        html += `<div class="user-profile-card">
-          <div class="user-avatar">${u.name ? u.name.charAt(0).toUpperCase() : '?'}</div>
-          <div class="user-info">
-            <div class="user-type">${u.userType}</div>
-            <div class="user-name">${u.name}</div>
-            <div class="user-email">${u.contacts}</div>
-            <div class="user-phone">${u.phone ? u.phone : ''}</div>
-            ${u.vehicle ? `<div class="user-vehicle">Vehicle: ${u.vehicle}</div>` : ''}
-          </div>
-        </div>`;
-      });
-      container.innerHTML = html;
+  document.getElementById('register-Form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const userType = document.getElementById('regUserType').value;
+    const name = document.getElementById('regName').value.trim();
+    const contacts = document.getElementById('regContacts').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const phone = document.getElementById('regPhone').value.trim();
+    const vehicle = document.getElementById('regVehicle').value.trim();
+    if (!userType || !name || !contacts || !password || !phone || (userType === 'Driver' && !vehicle)) {
+      alert('Please fill all fields.');
+      return;
     }
+    // Store user data in localStorage
+    let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+    let userData = { userType, name, contacts, password, phone };
+    if (userType === 'Driver') userData.vehicle = vehicle;
+    users.push(userData);
+    localStorage.setItem('magezaUsers', JSON.stringify(users));
+    alert('Registration successful!');
+    displayRegisteredUsers();
+    document.getElementById('register-Form').reset();
+    toggleDriverFields();
+  });
+
+  // Login form logic
+  document.getElementById('logIn-Form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const userType = document.getElementById('userType').value;
+    const contacts = document.getElementById('contacts').value.trim();
+    const password = document.getElementById('password').value;
+    let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+    const user = users.find(u => u.userType === userType && u.contacts === contacts && u.password === password);
+    if (user) {
+      // Redirect to profile page based on userType
+      let profilePage = userType.toLowerCase().replace(' ', '_') + '.html';
+      window.location.href = profilePage;
+    } else {
+      document.getElementById('errorMessage').textContent = 'Invalid credentials or user not registered.';
+    }
+  });
+
+  // Display registered users
+  function displayRegisteredUsers() {
+    let users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+    const container = document.getElementById('registeredUsers');
+    if (users.length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:#888;">No users registered yet.</p>';
+      return;
+    }
+    let html = '';
+    users.forEach(u => {
+      html += `<div class="user-profile-card">
+        <div class="user-avatar">${u.name ? u.name.charAt(0).toUpperCase() : '?'}</div>
+        <div class="user-info">
+          <div class="user-type">${u.userType}</div>
+          <div class="user-name">${u.name}</div>
+          <div class="user-email">${u.contacts}</div>
+          <div class="user-phone">${u.phone ? u.phone : ''}</div>
+          ${u.vehicle ? `<div class="user-vehicle">Vehicle: ${u.vehicle}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    container.innerHTML = html;
+  }
   </script>
+  <style>
+    .splash-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #0d1a36 0%, #1976d2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      transition: opacity 0.5s;
+      padding: 0 1.5em;
+      gap: 2.2em;
+      animation: splashFadeIn 1.1s cubic-bezier(.39,.575,.56,1.000);
+    }
+    .splash-screen img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 1.3em;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.22);
+      box-shadow: 0 0 32px 8px #42a5f5cc, 0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 2px 12px 0 #1976d2cc;
+      padding: 1.3em;
+      object-fit: contain;
+      border: 3.5px solid #fff;
+      outline: 3px solid #42a5f5;
+      outline-offset: -6px;
+      animation: logoPop 1.1s cubic-bezier(.39,.575,.56,1.000);
+    }
+    @keyframes logoPop {
+      0% { opacity: 0; transform: scale(0.7); box-shadow: 0 0 0 0 #42a5f5cc; }
+      60% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 48px 16px #42a5f5cc; }
+      100% { opacity: 1; transform: scale(1); box-shadow: 0 0 32px 8px #42a5f5cc, 0 8px 32px 0 rgba(25, 118, 210, 0.18), 0 2px 12px 0 #1976d2cc; }
+    }
+    .splash-screen h6 {
+      color: #e3f0fc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.18em;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-shadow: 0 2px 12px #0d1a36cc, 0 1px 4px #1976d2cc;
+      margin: 0;
+      text-align: center;
+      line-height: 1.5;
+      text-transform: uppercase;
+      opacity: 0.92;
+    }
+    @keyframes splashFadeIn {
+      0% { opacity: 0; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @media (max-width: 600px) {
+      .splash-screen {
+        padding: 0 0.5em;
+        gap: 1.1em;
+      }
+      .splash-screen img {
+        width: 72px;
+        height: 72px;
+        padding: 0.7em;
+        border-radius: 18px;
+        outline-width: 2px;
+        border-width: 2px;
+      }
+      .splash-screen h6 {
+        font-size: 0.98em;
+        letter-spacing: 0.11em;
+      }
+    }
+    .engraved-bg-logo {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.07;
+    }
+    .engraved-bg-logo img {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(1.2) drop-shadow(0 0 12px #1976d2cc);
+      user-select: none;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-overlay[style*="display: flex"] {
+      display: flex !important;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 2em 1.5em 1.5em 1.5em;
+      border-radius: 18px;
+      min-width: 320px;
+      max-width: 98vw;
+      box-shadow: 0 4px 24px rgba(25, 118, 210, 0.13);
+      animation: fadeInUp 0.7s cubic-bezier(.39,.575,.56,1.000);
+      position: relative;
+    }
+    .modal-title {
+      color: #1976d2;
+      font-size: 1.5em;
+      font-weight: 700;
+      margin-bottom: 1em;
+      text-align: center;
+    }
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7em;
+      align-items: stretch;
+    }
+    .modal-input {
+      border-radius: 10px;
+      border: 1.5px solid #b3c6e0;
+      padding: 0.7em 1em;
+      font-size: 1em;
+      background: #f5f7fa;
+      margin-bottom: 0.2em;
+      transition: border 0.2s;
+    }
+    .modal-input:focus {
+      border: 1.5px solid #1976d2;
+      outline: none;
+    }
+    .modal-btn-group {
+      display: flex;
+      gap: 1em;
+      justify-content: center;
+      margin-top: 1em;
+    }
+    .cancel-btn {
+      background: linear-gradient(90deg,#d32f2f 60%,#f44336 100%) !important;
+      color: #fff !important;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 2px 8px rgba(211,47,47,0.08);
+    }
+    .cancel-btn:hover {
+      background: linear-gradient(90deg,#b71c1c 60%,#e53935 100%) !important;
+      transform: translateY(-1px) scale(1.03);
+      box-shadow: 0 4px 16px rgba(211,47,47,0.16);
+    }
+    .register-btn {
+      background: linear-gradient(90deg,#1976d2 60%,#42a5f5 100%) !important;
+      color: #fff !important;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+    }
+    .register-btn:hover {
+      background: linear-gradient(90deg,#1565c0 60%,#1976d2 100%) !important;
+      transform: translateY(-1px) scale(1.03);
+      box-shadow: 0 4px 16px rgba(25,118,210,0.16);
+    }
+    
+    #registeredUsersContainer {
+      margin: 2em auto 0 auto;
+      max-width: 500px;
+      background: #f7fbff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(25, 118, 210, 0.08);
+      padding: 1.5em 1.2em 1.2em 1.2em;
+      text-align: center;
+    }
+    #registeredUsersContainer h3 {
+      color: #1976d2;
+      font-size: 1.3em;
+      margin-bottom: 1em;
+      font-weight: 700;
+    }
+    .registered-users-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      justify-content: center;
+    }
+    .user-profile-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1.5px 6px rgba(25, 118, 210, 0.09);
+      padding: 1em 1.2em;
+      min-width: 170px;
+      max-width: 210px;
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      margin-bottom: 0.5em;
+      transition: box-shadow 0.2s, transform 0.15s;
+      border: 1.5px solid #e3eafc;
+    }
+    .user-profile-card:hover {
+      box-shadow: 0 4px 16px rgba(25, 118, 210, 0.16);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(120deg, #1976d2 60%, #42a5f5 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: 700;
+      box-shadow: 0 1.5px 6px rgba(25, 118, 210, 0.13);
+      margin-right: 0.5em;
+      flex-shrink: 0;
+    }
+    .user-info {
+      text-align: left;
+      flex: 1;
+    }
+    .user-type {
+      font-size: 1em;
+      color: #1976d2;
+      font-weight: 600;
+      margin-bottom: 0.1em;
+    }
+    .user-name {
+      font-size: 1.1em;
+      font-weight: 500;
+      color: #222;
+    }
+    .user-email, .user-phone, .user-vehicle {
+      font-size: 0.95em;
+      color: #555;
+      margin-bottom: 0.1em;
+    }
+    .splash-screen img.big-animated-logo {
+    width: 220px;
+    height: 220px;
+    margin-bottom: 1.3em;
+    border-radius: 48px;
+    background: rgba(255,255,255,0.22);
+    box-shadow: 0 0 64px 16px #42a5f5cc, 0 16px 64px 0 rgba(25, 118, 210, 0.22), 0 4px 24px 0 #1976d2cc;
+    padding: 2em;
+    object-fit: contain;
+    border: 5px solid #fff;
+    outline: 5px solid #42a5f5;
+    outline-offset: -10px;
+    animation: logoBounce 2.2s cubic-bezier(.39,.575,.56,1.000) infinite alternate;
+  }
+
+  @keyframes logoBounce {
+    0%   { transform: scale(1) rotate(0deg); box-shadow: 0 0 64px 16px #42a5f5cc; }
+    40%  { transform: scale(1.08) rotate(-6deg); box-shadow: 0 0 80px 24px #42a5f5cc; }
+    60%  { transform: scale(1.12) rotate(6deg); box-shadow: 0 0 96px 32px #42a5f5cc; }
+    100% { transform: scale(1.04) rotate(0deg); box-shadow: 0 0 64px 16px #42a5f5cc; }
+  }
+
+  @media (max-width: 600px) {
+    .splash-screen img.big-animated-logo {
+      width: 120px;
+      height: 120px;
+      padding: 1em;
+      border-radius: 24px;
+      outline-width: 3px;
+      border-width: 3px;
+    }
+  }
+    @media (max-width: 600px) {
+      .modal-content { min-width: 98vw; padding: 1em 0.3em; }
+      #registeredUsersContainer { max-width: 98vw; padding: 1em 0.3em; }
+      .user-profile-card { min-width: 120px; max-width: 98vw; padding: 0.7em 0.5em; }
+      .user-avatar { width: 36px; height: 36px; font-size: 1.1em; }
+    }
+  </style>
+  <script src="app.js"></script>
+
+
+  <footer>
+    <p>&copy; 2025 Mageza App. All rights reserved.</p>
+    <p>Developed by the Mageza team.</p>
+  </footer>  
 </body>
 </html>
