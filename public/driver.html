@@ -35,7 +35,7 @@
       </li>
       <li>
         <img src="schedule.png" alt="Schedule" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="dvr-start-work.html">Schedule</a>
+        <a id="routePlannerModalTemplate" onclick="openMapModal()">Schedule</a>
       </li>
       <!--
       <li>
@@ -343,10 +343,7 @@
       window.onload = function() {
         typeGreeting(getGreeting(), 'greeting');
       };
-  <footer>
-    <p>&copy; 2025 Mageza App. All rights reserved.</p>
-    <p>Developed by the Mageza team.</p>
-  </footer>
+
   </script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
@@ -405,9 +402,12 @@
     }
   });
 </script>
-  <footer>
+<div class="profile-container">
+  <footer style="z-index: 50;">
     <p>&copy; 2025 Mageza App. All rights reserved.</p>
     <p>by the Mageza team.</p>
+    <img src="mageza-logo.png" style="image-rendering: inherit;">
   </footer>
+  </div>
 </body>
 </html>

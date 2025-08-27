@@ -1,18 +1,12 @@
-<script type="module">
-  import { getGreeting, typeGreeting, setupPassengerSim } from '../src/passenger-app.js';
-  window.addEventListener('DOMContentLoaded', function() {
-    typeGreeting(getGreeting(), 'greeting');
-    setupPassengerSim();
-  });
-</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passenger Profile</title>
-    <link rel="stylesheet" href="../src/style.css">
-    <!-- (Google Maps init code removed for clarity; not used in this prototype) -->
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
     <div class="profile-container">
@@ -136,6 +130,13 @@
         .logout-btn { width: 100%; margin-top: 0.5em; align-self: stretch; }
       }
     </style>
+<script type="module">
+  import { getGreeting, typeGreeting, setupPassengerSim } from '../src/passenger-app.js';
+  window.addEventListener('DOMContentLoaded', function() {
+    typeGreeting(getGreeting(), 'greeting');
+    setupPassengerSim();
+  });
+</script>
     <footer>
       <p>&copy; 2025 Mageza App. All rights reserved.</p>
       <p>Developed by the Mageza team.</p>
