@@ -54,8 +54,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 2em 2em;
   margin: 2.2em 0 1.7em 0;
-  width: 100%;
-  max-width: 1200px;
+  width: 85%;
+  max-width: 900px;
   background: linear-gradient(135deg, #e3f0fc 80%, #90caf9 100%);
   border-radius: 32px;
   box-shadow: 0 8px 40px 0 rgba(25, 118, 210, 0.13), 0 2px 12px 0 #90caf9;
@@ -138,7 +138,7 @@
 }
 /* Global dynamic styles for all profile pages */
 body {
-  background: linear-gradient(120deg, #1976d2 0%, #42a5f5 100%);
+  background: linear-gradient(120deg, #027af183 0%, #42a5f5 100%);
   min-height: 100vh;
   font-family: 'Segoe UI', Arial, sans-serif;
   position: relative;
@@ -147,16 +147,16 @@ body::before {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: url('../public/mageza-logo.png') no-repeat center 8vh;
+  background: url('../public/mageza-logo.png') no-repeat center 10vh;
   background-size: 120px 120px;
   opacity: 0.08;
   z-index: 0;
   pointer-events: none;
 }
 .profile-container {
-  background: #fff;
+  background: rgba(3, 167, 243, 0.788);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(25, 118, 210, 0.08), 0 1.5px 6px rgba(25, 118, 210, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.397), 0 1.5px 6px rgba(25, 118, 210, 0.06);
   max-width: 900px;
   margin: 2.5em auto 1.5em auto;
   padding: 2.2em 2em 1.5em 2em;
@@ -194,7 +194,7 @@ body::before {
   border-radius: 50%;
   border: 3px solid #1976d2;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.13);
-  background: #f5f7fa;
+  background: #a3c8ff;
   object-fit: cover;
   transition: transform 0.2s;
 }
@@ -261,7 +261,7 @@ body::before {
 footer {
   background: transparent;
   text-align: center;
-  color: #1976d2;
+  color: #0718ffe3;
   font-size: 1em;
   margin-top: 2em;
   padding-bottom: 1.5em;
@@ -303,7 +303,7 @@ body {
   left: -220px;
   width: 220px;
   height: 100vh;
-  background: #00306e;
+  background: #016db6;
   color: #fff;
   transition: left 0.3s cubic-bezier(.4,0,.2,1);
   z-index: 1000;
@@ -363,7 +363,7 @@ a:hover {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #000;
+  background: #000c11b7;
   color: rgb(255, 187, 0);
   display: flex;
   flex-direction: column;
@@ -398,6 +398,7 @@ a{
 
 a:hover{
   color: #f5c800;
+  text-decoration: none;
 }
 
 .input-boxes {
@@ -424,19 +425,6 @@ a:hover{
 select:hover {
   transform: scale(1.05);
 }
-
-select {
-  border-radius: 25px;
-  border: 1px solid rgb(214, 127, 6);
-  padding: 7.5px;
-  text-align: center;
-  background: rgba(104, 174, 201, 0.29);
-  width: 90%;
-  height:  50%;
-  border: 1px solid rgb(8, 29, 95);
-  z-index: 12;
-}
-
 
 .indxInput,
 select {
@@ -488,9 +476,9 @@ button {
   margin: auto;
   object-fit: cover;
   border-radius: 20%;
-  border: 3.5px solid #f4d109;
+  border: 3.5px solid #f49609;
   background: #1da8f8;
-  border: 2px solid #f4d109;
+  border: 2px solid #f49609;
   box-shadow: 0 5px 8px rgba(0,0,0,0.15);
   image-rendering: crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -511,10 +499,11 @@ footer {
   flex-direction: column;
   align-items: center;
   margin-bottom: 2em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
 .profile-container .btnInput {
-  color: rgb(252, 252, 252);
+  color: rgb(4, 174, 253);
 }
 
 .profile-pic-wrapper {
@@ -530,7 +519,7 @@ footer {
   object-fit: cover;
   border: 4px solid #075df0d7;
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  background: #f0f0f0;
+  background: #f5bc03;
 }
 .btnInput {
   margin-top: 0.5em;
@@ -611,7 +600,7 @@ footer {
 }
 
 .profile-container ul li {
-  background: #fff;
+  background: #7b7f8d;
   border-radius: 18px 18px 0 0;
   box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(25, 118, 210, 0.08);
   padding: 1em 2.2em 0.8em 2.2em;
@@ -636,7 +625,7 @@ footer {
   color: #fff;
   transform: translateY(-3px) scale(1.04);
   box-shadow: 0 8px 32px rgba(25, 118, 210, 0.18), 0 2px 8px rgba(25, 118, 210, 0.10);
-  border-bottom: 3px solid #fff;
+  border-bottom: 3px solid #8a98a0;
 }
 
 .profile-container ul li img {
@@ -661,7 +650,7 @@ footer {
 }
 
 /* Fix only the admin map internal CSS */
-.admin-map.map-rounded {
+.map-rounded {
   width: 95%;
   height: 550px;
   min-height: 300px;
@@ -683,17 +672,24 @@ footer {
 .modal-input {
   width: 100%;
   padding: 0.6em 1em;
-  border: 1.5px solid #b3c6e0;
+
   border-radius: 10px;
   font-size: 1em;
   box-sizing: border-box;
   background: #f5f7fa;
   transition: border-color 0.2s;
+  border: 1px solid rgb(214, 127, 6);
+  border: 1px solid rgb(5, 10, 80);
 }
 .modal-input:focus {
   border-color: #1976d2;
   outline: none;
 }
+.modal-input:hover {
+    transform: scale(1.05);
+    background-color: #058bf836;
+}
+
 .modal-input::placeholder {
   max-width: 100%;
   color: #b3c6e0;
@@ -711,4 +707,12 @@ footer {
 }
 .drv-tb-td {
   text-decoration: none;
+}
+
+.footer-links {
+  display : flex;
+  justify-content:space-between;
+  margin: 5rem;
+  padding: 5vh;
+  font-size: small;
 }
