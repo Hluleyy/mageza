@@ -1,0 +1,9 @@
+# Netlify configuration file
+
+[build]
+  publish = "public"
+  command = "npm run build"
+
+[dev]
+  command = "npm run serve"
+  port = 3000
