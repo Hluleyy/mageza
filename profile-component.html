@@ -1,0 +1,241 @@
+<!-- Standardized Profile Picture Component -->
+<div class="profile-picture-component">
+  <div class="profile-header">
+    <div class="profile-avatar-container">
+      <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
+      <div class="profile-upload-overlay">
+        <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="profile-info">
+      <h2 id="profileGreeting" class="profile-greeting">Welcome!</h2>
+      <p id="profileName" class="profile-name">User Name</p>
+      <p id="profileType" class="profile-type">User Type</p>
+    </div>
+  </div>
+  
+  <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
+  
+  <div class="profile-actions">
+    <button class="modern-btn profile-action-btn" onclick="document.getElementById('profileUploadInput').click()">
+      Change Picture
+    </button>
+  </div>
+</div>
+
+<style>
+.profile-picture-component {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.profile-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(25, 118, 210, 0.9);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-upload-overlay:hover {
+  background: rgba(21, 101, 192, 0.9);
+}
+
+.upload-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-greeting {
+  color: #1976d2;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.profile-name {
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+}
+
+.profile-type {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.profile-action-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-avatar-container {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .profile-greeting {
+    font-size: 1.1rem;
+  }
+}
+</style>
+
+<script>
+// Profile component functionality
+function loadProfileData() {
+  try {
+    // Get current user from localStorage or session
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+    
+    let userData = currentUser;
+    if (!userData.name && users.length > 0) {
+      // Fallback to first user or use default
+      userData = users[0] || {};
+    }
+    
+    // Update profile information
+    if (userData.name) {
+      document.getElementById('profileName').textContent = userData.name;
+    }
+    
+    if (userData.userType) {
+      document.getElementById('profileType').textContent = userData.userType;
+    }
+    
+    // Set greeting based on time of day
+    const hour = new Date().getHours();
+    let greeting = 'Welcome';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 18) greeting = 'Good afternoon';
+    else greeting = 'Good evening';
+    
+    if (userData.name) {
+      document.getElementById('profileGreeting').textContent = `${greeting}, ${userData.name.split(' ')[0]}!`;
+    } else {
+      document.getElementById('profileGreeting').textContent = `${greeting}!`;
+    }
+    
+    // Load profile picture if available
+    const profilePic = localStorage.getItem('profilePicture');
+    if (profilePic) {
+      document.getElementById('profileAvatar').src = profilePic;
+    }
+    
+  } catch (error) {
+    console.error('Error loading profile data:', error);
+  }
+}
+
+function handleProfileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Update profile picture
+      document.getElementById('profileAvatar').src = e.target.result;
+      
+      // Save to localStorage
+      localStorage.setItem('profilePicture', e.target.result);
+      
+      // Optional: Send to backend if available
+      try {
+        if (typeof window.sendProfileToBackend === 'function') {
+          window.sendProfileToBackend(e.target.result);
+        }
+      } catch (error) {
+        console.log('Backend upload not available');
+      }
+      
+      alert('Profile picture updated successfully!');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Initialize when component loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if profile component exists on this page
+  if (document.querySelector('.profile-picture-component')) {
+    loadProfileData();
+  }
+});
+</script>

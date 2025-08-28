@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+      /* Profile Component Styles */
+      .profile-picture-component {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1rem auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e9ecef;
+        max-width: 950px;
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .profile-avatar-container {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #1976d2;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+      }
+
+      .profile-avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .profile-avatar:hover {
+        transform: scale(1.05);
+      }
+
+      .profile-upload-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: rgba(25, 118, 210, 0.9);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .profile-upload-overlay:hover {
+        background: rgba(21, 101, 192, 0.9);
+      }
+
+      .upload-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+      }
+
+      .profile-info {
+        flex: 1;
+      }
+
+      .profile-greeting {
+        color: #1976d2;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .profile-name {
+        color: #2c3e50;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .profile-type {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+        text-transform: capitalize;
+      }
+
+      .profile-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .profile-action-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .profile-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      }
+
+      @media (max-width: 600px) {
+        .profile-header {
+          flex-direction: column;
+          text-align: center;
+        }
+        
+        .profile-avatar-container {
+          width: 70px;
+          height: 70px;
+        }
+        
+        .profile-greeting {
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+</head>
+<body>
+
+<!-- Profile Picture Component -->
+<div class="profile-picture-component">
+  <div class="profile-header">
+    <div class="profile-avatar-container">
+      <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
+      <div class="profile-upload-overlay">
+        <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="profile-info">
+      <h2 id="profileGreeting" class="profile-greeting">Welcome!</h2>
+      <p id="profileName" class="profile-name">Passenger Name</p>
+      <p id="profileType" class="profile-type">Passenger</p>
+    </div>
+  </div>
+  
+  <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
+  
+  <div class="profile-actions">
+    <button class="modern-btn profile-action-btn" onclick="document.getElementById('profileUploadInput').click()">
+      Change Picture
+    </button>
+  </div>
+</div>
+
+<script>
+// Profile component functionality for passenger page
+function loadProfileData() {
+  try {
+    // Get current user from localStorage or session
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+    
+    let userData = currentUser;
+    if (!userData.name && users.length > 0) {
+      // Find a passenger user
+      const passengerUser = users.find(u => u.userType === 'Passenger') || users[0] || {};
+      userData = passengerUser;
+    }
+    
+    // Update profile information
+    if (userData.name) {
+      document.getElementById('profileName').textContent = userData.name;
+    }
+    
+    if (userData.userType) {
+      document.getElementById('profileType').textContent = userData.userType;
+    }
+    
+    // Set greeting based on time of day
+    const hour = new Date().getHours();
+    let greeting = 'Welcome';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 18) greeting = 'Good afternoon';
+    else greeting = 'Good evening';
+    
+    if (userData.name) {
+      document.getElementById('profileGreeting').textContent = `${greeting}, ${userData.name.split(' ')[0]}!`;
+    } else {
+      document.getElementById('profileGreeting').textContent = `${greeting}, Passenger!`;
+    }
+    
+    // Load profile picture if available
+    const profilePic = localStorage.getItem('profilePicture');
+    if (profilePic) {
+      document.getElementById('profileAvatar').src = profilePic;
+    }
+    
+  } catch (error) {
+    console.error('Error loading profile data:', error);
+  }
+}
+
+function handleProfileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Update profile picture
+      document.getElementById('profileAvatar').src = e.target.result;
+      
+      // Save to localStorage
+      localStorage.setItem('profilePicture', e.target.result);
+      
+      alert('Profile picture updated successfully!');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Initialize profile component
+document.addEventListener('DOMContentLoaded', function() {
+  loadProfileData();
+});
+</script>
+
+    <p>Find routes, book rides, and view your ride history here.</p>
+    <div class="passenger-action-links">
+      <a href="#" title="Find Route" class="action-link">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:0.5em;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#1976d2"/></svg>
+        Find Route
+      </a>
+      <a href="#" title="Book a Ride" class="action-link">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:0.5em;"><path d="M5 16c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-5H5v5zm14-7V7c0-1.1-.9-2-2-2H7C5.9 5 5 5.9 5 7v2h14zm-2 0H7V7h10v2z" fill="#1976d2"/></svg>
+        Book a Ride
+      </a>
+      <a href="#" title="Ride History" class="action-link">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:0.5em;"><path d="M13 3a9 9 0 1 0 8.95 10.05h-2.02A7 7 0 1 1 12 5v4l3.89 2.27.98-1.73-3.87-2.25V3z" fill="#1976d2"/></svg>
+        Ride History
+      </a>
+    </div>
+    <style>
+      .passenger-action-links {
+        display: flex;
+        justify-content: center;
+        gap: 2em;
+        margin: 1.5em 0 1.5em 0;
+      }
+      .action-link {
+        display: flex;
+        align-items: center;
+        font-size: 1.13em;
+        font-weight: 600;
+        color: #1976d2;
+        background: #e3f0fc;
+        border-radius: 14px;
+        padding: 0.7em 1.3em;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+        text-decoration: none;
+        transition: background 0.18s, color 0.18s, transform 0.13s;
+      }
+      .action-link:hover, .action-link:focus {
+        background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+        color: #fff;
+        transform: translateY(-2px) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .passenger-action-links {
+          flex-direction: column;
+          gap: 1em;
+        }
+        .action-link {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+    <div class="btn-map-wrap">
+      <button class="modern-btn logout-btn" onclick="window.location.href='index.html'">Logout</button>
+      <link rel="stylesheet" href="leaflet.css">
+      <div id="map-sim" style="width:100%;height:400px;position:relative;border:1px solid #aaa;overflow:hidden;margin-bottom:1em;"></div>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <script>
+        // Initialize Leaflet map
+        document.addEventListener('DOMContentLoaded', function() {
+          var map = L.map('map-sim').setView([-26.2041, 28.0473], 12); // Johannesburg default
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+          }).addTo(map);
+          // Expose map for simulation functions
+          window.leafletMap = map;
+        });
+      </script>
+      <div class="btn-group">
+        <button class="modern-btn" id="simShowMe">Show Me</button>
+        <button class="modern-btn" id="simMoveMe">Move Me</button>
+        <button class="modern-btn" id="simRequestPickup">Request Pickup</button>
+        <button class="modern-btn" id="simCheckInTaxi">Check If In Taxi</button>
+      </div>
+      <p id="mapStatus"></p>
+    </div>
+    <style>
+      .greeting-responsive h1 {
+        font-size: 2.2em;
+        margin: 0.5em 0 0.7em 0;
+        text-align: center;
+        color: #1976d2;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      @media (max-width: 600px) {
+        .greeting-responsive h1 { font-size: 1.3em; }
+      }
+      .btn-map-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1.5em;
+      }
+      .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7em;
+        justify-content: center;
+        margin: 1.2em 0 0.5em 0;
+      }
+      .logout-btn {
+        align-self: flex-end;
+        margin-bottom: 1em;
+        background: linear-gradient(90deg, #d32f2f 0%, #ff5252 100%);
+      }
+      .logout-btn:hover, .logout-btn:focus {
+        background: linear-gradient(90deg, #b71c1c 0%, #d32f2f 100%);
+      }
+      @media (max-width: 600px) {
+        .btn-group { flex-direction: column; align-items: stretch; }
+        .logout-btn { width: 100%; margin-top: 0.5em; align-self: stretch; }
+      }
+    </style>
+<script type="module">
+  import { getGreeting, typeGreeting, setupPassengerSim } from '../src/passenger-app.js';
+  window.addEventListener('DOMContentLoaded', function() {
+    typeGreeting(getGreeting(), 'greeting');
+    setupPassengerSim();
+  });
+</script>
+    <footer>
+      <p>&copy; 2025 Mageza App. All rights reserved.</p>
+      <p>Developed by the Mageza team.</p>
+    </footer>
+</body>
+</html>

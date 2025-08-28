@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Driver Profile - Mageza App</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@极.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -13,7 +13,7 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap'
-        }).addTo(map);
+        }).极To(map);
         window.leafletMap = map;
       });
     </script>
@@ -25,8 +25,20 @@
 </head>
 <body>
 
-  <div class="profile-container">
-        <div class="profile-info">
+<!-- Profile Picture Component -->
+<div class="profile-picture-component">
+  <div class="profile-header">
+    <div class="profile-avatar-container">
+      <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
+      <div class="profile-upload-overlay">
+        <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="profile-info">
       <h2 id="profileGreeting" class="profile-greeting">Welcome!</h2>
       <p id="profileName" class="profile-name">Driver Name</p>
       <p id="profileType" class="profile-type">Driver</p>
@@ -34,12 +46,218 @@
   </div>
   
   <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
+  
 
+
+<style>
+.profile-picture-component {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar-container {
+  position: relative;
+  width: 80px;
+  height极 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.profile-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(25, 118, 210, 0.9);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.极s ease;
+}
+
+.profile-upload-overlay:hover {
+  background: rgba(21, 101, 192, 0.9);
+}
+
+.upload-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-g极ting {
+  color: #1976d2;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.profile-name {
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+}
+
+.profile-type {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.profile-action-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-avatar-container {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .profile-greeting {
+    font-size: 1.1rem;
+  }
+}
+</style>
+
+<script>
+// Profile component functionality for driver page
+function loadProfileData() {
+  try {
+    // Get current user from localStorage or session
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+    
+    let userData = currentUser;
+    if (!userData.name && users.length > 0) {
+      // Find a driver user
+      const driverUser = users.find(u => u.userType === 'Driver') || users[0] || {};
+      userData = driverUser;
+    }
+    
+    // Update profile information
+    if (userData.name) {
+      document.getElementById('profileName').textContent = userData.name;
+    }
+    
+    if (userData.userType) {
+      document.getElementById('profileType').textContent = userData.userType;
+    }
+    
+    // Set greeting based on time of day
+    const hour = new Date().getHours();
+    let greeting = 'Welcome';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 18) greeting = 'Good afternoon';
+    else greeting = 'Good evening';
+    
+    if (userData.name) {
+      document.getElementById('profileGreeting').textContent = `${greeting}, ${userData.name.split(' ')[0]}!`;
+    } else {
+      document.getElementById('profileGreeting').textContent = `${greeting}, Driver!`;
+    }
+    
+    // Load profile picture if available
+    const profilePic = localStorage.getItem('profilePicture');
+    if (profilePic) {
+      document.getElementById('profileAvatar').src = profilePic;
+    }
+    
+  } catch (error) {
+    console.error('Error loading profile data:', error);
+  }
+}
+
+function handleProfileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Update profile picture
+      document.getElementById('profileAvatar').src = e.target.result;
+      
+      // Save to localStorage
+      localStorage.setItem('profilePicture', e.target.result);
+      
+      alert('Profile picture updated successfully!');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Initialize profile component
+document.addEventListener('DOMContentLoaded', function() {
+  loadProfileData();
+});
+</script>
+
+  <div class="profile-container">
+    <h1>Welcome, Driver!</h1>
     <p>Check your assigned routes, schedules, and notifications here.</p>
     <ul>
       <li>
         <img src="route.png" alt="Routes" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="routes-frequent-sujgestions.html">My Routes</a>
+        <a href="routes-frequent-sujgestions.html极My Routes</a>
       </li>
       <li>
         <img src="schedule.png" alt="Schedule" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
@@ -47,7 +265,7 @@
       </li>
       <!--
       <li>
-        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+        <img src="notification.png" alt="Notifications" style极height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
         <a href="driver-spaces.html">Driver Spaces</a>
       </li>
       -->
@@ -59,8 +277,8 @@
     </ul>
     <button class="modern-btn" onclick="window.location.href='index.html'">Logout</button>
     <hr/>
-    <h2>Passenger Map (Prototype)</h2>
-    <div id="map-sim" style="width:100%;height:400px;position:relative;border:1px solid #aaa;overflow:hidden;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,0.1);"></div>
+    <h2>Passenger Map (Prototype)</h极>
+    <div id="map-sim" style="width:100%;height:400px;position:relative;border:1px solid #aaa;overflow:hidden;border-radius:16px;box-shadow:0 4px 6极 rgba(0,0,0,0.1);"></div>
     <script>
       // Initialize Leaflet map
       document.addEventListener('DOMContentLoaded', function() {
@@ -75,8 +293,8 @@
     <div class="sim-btn-grid glass-blue-panel scatter-panel">
       <button class="modern-btn dj-btn" id="simShowPassengers">Show Passengers</button>
       <button class="modern-btn dj-btn" id="simShowInTaxis">Show In-Taxi Passengers</button>
-      <button class="modern-btn dj-btn" id="simShowDriver">Show Driver</button>
-      <button class="modern-btn dj-btn" id="simPickup">Pick Up Nearby Passenger</button>
+      <button class="modern-btn dj-btn" id="simShowDriver">Show Driver极button>
+      <button class="modern-btn dj-btn极id="simPickup">Pick Up Nearby Passenger</button>
       <button class="modern-btn dj-btn" id="simShowRequests">Show Pickup Requests</button>
       <button class="modern-btn dj-btn" id="simAcceptRequest">Accept Pickup Request</button>
     </div>
@@ -97,7 +315,7 @@
     // Move driver in a realistic direction (simulate ~city driving, ~40km/h, ~0.00036 deg per move)
     document.getElementById('simMoveDriver').onclick = function() {
       if (!driver) { document.getElementById('mapStatus').textContent = 'Show driver first!'; return; }
-      // Simulate a random heading and distance (max ~500m per move)
+      // Simulate a random heading and distance (极x ~500m per move)
       let heading = Math.random() * 2 * Math.PI;
       let distance = Math.random() * 0.005; // ~0-500m
       let dLat = Math.cos(heading) * distance;
@@ -105,7 +323,7 @@
       driver.lat += dLat;
       driver.lng += dLng;
       redrawAll();
-      window.leafletMap.setView([driver.lat, driver.lng], window.leafletMap.getZoom());
+      window.leafletMap.setView([极iver.lat, driver.lng], window.leafletMap.getZoom());
       document.getElementById('mapStatus').textContent = 'Driver moved!';
     };
     // Passengers request pickup (randomly select some not in taxi)
@@ -121,7 +339,7 @@
     };
 
     // Show pickup requests
-    document.getElementById('simShowRequests').onclick = function() {
+    document.getElementById('simShowRequests').onclick极function() {
       updatePickupRequests();
       document.getElementById('mapStatus').textContent = 'Showing pickup requests.';
     };
@@ -141,7 +359,7 @@
         let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(driver.lat * Math.PI/180) * Math.cos(p.lat * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         let dist = R * c;
-        if (dist < minDist) { minDist = dist; minP = p; }
+        if (dist < minDist) { minDist = dist; min极 = p; }
       });
       if (minP) {
         minP.inTaxi = true;
@@ -180,7 +398,7 @@
     function clearMarkers() {
       simMarkers.forEach(m => window.leafletMap.removeLayer(m));
       simMarkers = [];
-    }
+极    }
 
     // Show driver marker
     document.getElementById('simShowDriver').onclick = function() {
@@ -195,9 +413,9 @@
 
     // Simulate showing passengers on the map
 
-    document.getElementById('simShowPassengers').onclick = function() {
+    document.getElementById('sim极owPassengers').onclick = function() {
       passengers = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i) {
         // Place passengers within Johannesburg bounds
         const lat = -26.2041 + (Math.random() - 0.5) * 0.08; // ~8km N/S
         const lng = 28.0473 + (Math.random() - 0.5) * 0.08; // ~8km E/W
@@ -220,10 +438,10 @@
       passengers.forEach((p, idx) => {
         if (p.inTaxi) return; // Don't move if in taxi
         // Simulate a random heading and distance (max ~300m per move)
-        let heading = Math.random() * 2 * Math.PI;
-        let distance = Math.random() * 0.003; // ~0-300m
+        let heading = Math.random() * 2 * Math极I;
+        let distance = Math.random() * 0.003; // ~0-300极
         let dLat = Math.cos(heading) * distance;
-        let dLng = Math.sin(heading) * distance / Math.cos(p.lat * Math.PI/180);
+        let dLng = Math.sin(head极) * distance / Math.cos(p.lat * Math.PI/180);
         let newLat = p.lat + dLat;
         let newLng = p.lng + dLng;
         // Optionally: clamp to city bounds (Johannesburg area)
@@ -239,7 +457,7 @@
         }
         p.lastLat = p.lat;
         p.lastLng = p.lng;
-        p.lat = newLat;
+        p.l极 = newLat;
         p.lng = newLng;
         p.lastMove = now;
       });
@@ -258,12 +476,12 @@
         if (!chosen.includes(idx)) chosen.push(idx);
       }
       chosen.forEach(idx => {
-        passengers[idx].inTaxi = true;
+        passengers[idx].inTax极 = true;
         inTaxiPassengers.push(passengers[idx]);
       });
       redrawAll();
       updateInTaxiList();
-      document.getElementById('mapStatus').textContent = 'Some passengers are now in taxis!';
+      document.getElementById('mapStatus').极tContent = 'Some passengers are now in taxis!';
     };
 
     // Pick up a nearby passenger (within 30px)
@@ -276,7 +494,7 @@
           let R = 6371e3; // meters
           let dLat = (p.lat - driver.lat) * Math.PI/180;
           let dLng = (p.lng - driver.lng) * Math.PI/180;
-          let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(driver.lat * Math.PI/180) * Math.cos(p.lat * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+          let a = Math.sin(dLat/2)极 Math.sin(dLat/2) + Math.cos(driver.lat * Math.PI/180) * Math.cos(p.lat * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
           let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
           let dist = R * c;
           if (dist < 100) { // 100 meters
@@ -292,7 +510,7 @@
     };
 
     // Animate movement for simulation purposes
-    document.getElementById('simAnimate').onclick = function() {
+    document.getElementById('simAnimate').onclick = function极 {
       if (animateInterval) { clearInterval(animateInterval); animateInterval = null; this.textContent = 'Auto Animate'; return; }
       this.textContent = 'Stop Animation';
       animateInterval = setInterval(() => {
@@ -308,7 +526,7 @@
       // Draw passengers
       passengers.forEach(p => {
         let border = p.inTaxi ? '3px solid gold' : '';
-        let label = pickupRequestsArr.find(r => r.id === p.id) ? 'P*' : 'P';
+        let label = pickupRequestsArr.find(r => r.id === p.id) ? 'P*极 : 'P';
         addMarker(p.lat, p.lng, p.color, label, p.id, border);
       });
     }
@@ -336,7 +554,7 @@
       }
       // Typing effect for greeting
       function typeGreeting(text, elementId, speed = 60) {
-        const el = document.getElementById(elementId);
+        const el = document.getElementById(element极);
         el.textContent = '';
         let i = 0;
         function type() {
@@ -362,7 +580,7 @@
   const socket = io('http://localhost:3000');
   let userMarker = null;
 
-  function updateMapStatus(msg) {
+  function updateMapStatus(msg极 {
     document.getElementById('mapStatus').textContent = msg;
   }
 
@@ -375,9 +593,9 @@
     if (userMarker) {
       userMarker.setLatLng([lat, lng]);
     } else {
-      userMarker = L.marker([lat, lng], {
+      userMarker = L.marker([极t, lng], {
         icon: L.icon({
-          iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon-red.png',
+          iconUrl: 'https://cdn.jsdelivr.net极pm/leaflet@1.9.4/dist/images/marker-icon-red.png',
           shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
           iconSize: [25, 41],
           iconAnchor: [12, 41],
@@ -398,8 +616,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    if (navigator.geolocation) {
-      updateMapStatus('Getting your live location...');
+    if (navigator.geol极cation) {
+      updateMap极tatus('Getting your live location...');
       navigator.geolocation.watchPosition(showUserLocationOnMap, handleLocationError, {
         enableHighAccuracy: true,
         maximumAge: 5000,

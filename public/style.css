@@ -178,9 +178,9 @@ body::before {
   animation: popIn 1.2s cubic-bezier(.39,.575,.56,1.000);
 }
 @keyframes popIn {
-  0% { opacity: 0; transform: scale(0.8); }
-  80% { opacity: 1; transform: scale(1.05); }
-  100% { opacity: 1; transform: scale(1); }
+ 0% { opacity: 0; transform: scale(0.8); }
+ 80% { opacity: 1; transform: scale(1.05); }
+ 100% { opacity: 1; transform: scale(1); }
 }
 .profile-pic-wrapper {
   display: flex;

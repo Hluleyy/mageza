@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    /* Profile Component Styles */
+    .profile-picture-component {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e9ecef;
+      max-width: 950px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-avatar-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #1976d2;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+    }
+
+    .profile-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-upload-overlay {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: rgba(25, 118, 210, 0.9);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .profile-upload-overlay:hover {
+      background: rgba(21, 101, 192, 0.9);
+    }
+
+    .upload-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-greeting {
+      color: #1976d2;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .profile-name {
+      color: #2c3e50;
+      font-size: 1rem;
+      font-weight: 500;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .profile-type {
+      color: #6c757d;
+      font-size: 0.9rem;
+      margin: 0;
+      text-transform: capitalize;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .profile-action-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .profile-action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+    }
+
+    @media (max-width: 600px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .profile-avatar-container {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .profile-greeting {
+        font-size: 1.1rem;
+      }
+    }
+    
+    /* Admin specific styles */
+    .admin-map {
+      width: 100%;
+      height: 400px;
+      border-radius: 16px;
+      margin: 2em auto;
+      max-width: 950px;
+    }
+    
+    #divForAdminDetails {
+      max-width: 950px;
+      margin: 2em auto;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <button id="menuToggleBtn" class="menu-toggle-btn">&#9776;</button>
+  <div class="index-Menu" id="indexMenu">
+    <div id="admin-menu-root"></div>
+    <script type="text/babel">
+      function ViewTaxis() {
+        return <div><h2>Taxi List</h2><p>Display all taxis here.</p></div>;
+      }
+      function ViewDrivers() {
+        return <div><h2>Driver List</h2><p>Display all drivers here.</p></div>;
+      }
+      function ViewBookings() {
+        return <div><h2>Bookings</h2><p>Display all bookings here.</p></div>;
+      }
+      function ViewFeedback() {
+        window.location.href = "modals-system.html";
+        return <div><h2>Feedback</h2><p>Display all feedback here.</p></div>;
+      }
+      function Logout() {
+        window.location.href = "index.html";
+        return null;
+      }
+
+      function AdminMenu() {
+        const [page, setPage] = React.useState("home");
+        let content = null;
+        switch(page) {
+          case "taxis": content = <ViewTaxis />; break;
+          case "drivers": content = <ViewDrivers />; break;
+          case "bookings": content = <ViewBookings />; break;
+          case "feedback": content = <ViewFeedback />; break;
+          case "logout": content = <Logout />; break;
+          default: content = <div><p>Select an option from the menu.</p></div>;
+        }
+        return (
+          <div>
+            <ul>
+              <li><button onClick={() => setPage("taxis")}>View Taxis</button></li>
+              <li><button onClick={() => setPage("drivers")}>View Drivers</button></li>
+              <li><button onClick={() => setPage("bookings")}>View Bookings</button></li>
+              <li><button onClick={() => setPage("feedback")}>View Feedback</button></li>
+              <li><button onClick={() => setPage("logout")}>Logout</button></li>
+            </ul>
+            <div>{content}</div>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<AdminMenu />, document.getElementById('admin-menu-root'));
+    </script>
+    <!-- Add these CDN links in your <head> if not already present: -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  </div>
+
+  <!-- Profile Picture Component -->
+  <div class="profile-picture-component">
+    <div class="profile-header">
+      <div class="profile-avatar-container">
+        <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
+        <div class="profile-upload-overlay">
+          <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2 id="profileGreeting" class="profile-greeting">Welcome!</h2>
+        <p id="profileName" class="profile-name">Admin Name</p>
+        <p id="profileType" class="profile-type">Administrator</p>
+      </div>
+    </div>
+    
+    <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
+    
+    <div class="profile-actions">
+      <button class="modern-btn profile-action-btn" onclick="document.getElementById('profileUploadInput').click()">
+        Change Picture
+      </button>
+    </div>
+  </div>
+
+  <script>
+  // Profile component functionality for admin page
+  function loadProfileData() {
+    try {
+      // Get current user from localStorage or session
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+      
+      let userData = currentUser;
+      if (!userData.name && users.length > 0) {
+        // Find an admin user
+        const adminUser = users.find(u => u.userType === 'Admin') || users[0] || {};
+        userData = adminUser;
+      }
+      
+      // Update profile information
+      if (userData.name) {
+        document.getElementById('profileName').textContent = userData.name;
+      }
+      
+      if (userData.userType) {
+        document.getElementById('profileType').textContent = userData.userType;
+      }
+      
+      // Set greeting based on time of day
+      const hour = new Date().getHours();
+      let greeting = 'Welcome';
+      if (hour < 12) greeting = 'Good morning';
+      else if (hour < 18) greeting = 'Good afternoon';
+      else greeting = 'Good evening';
+      
+      if (userData.name) {
+        document.getElementById('profileGreeting').textContent = `${greeting}, ${userData.name.split(' ')[0]}!`;
+      } else {
+        document.getElementById('profileGreeting').textContent = `${greeting}, Admin!`;
+      }
+      
+      // Load profile picture if available
+      const profilePic = localStorage.getItem('profilePicture');
+      if (profilePic) {
+        document.getElementById('profileAvatar').src = profilePic;
+      }
+      
+    } catch (error) {
+      console.error('Error loading profile data:', error);
+    }
+  }
+
+  function handleProfileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Update profile picture
+        document.getElementById('profileAvatar').src = e.target.result;
+        
+        // Save to localStorage
+        localStorage.setItem('profilePicture', e.target.result);
+        
+        // Send to backend if needed
+        try {
+          fetch('http://localhost:5000/api/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: e.target.result })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success){
+              console.log('Profile picture saved to backend!');
+            }
+          })
+          .catch(err => console.log('Backend save not available'));
+        } catch (error) {
+          console.log('Backend save not available');
+        }
+        
+        alert('Profile picture updated successfully!');
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Initialize profile component
+  document.addEventListener('DOMContentLoaded', function() {
+    loadProfileData();
+  });
+  </script>
+
+  <div class="profile-container">
+    <div id="map-sim" class="admin-map map-rounded"></div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize Leaflet map for admin
+    document.addEventListener('DOMContentLoaded', function() {
+      var map = L.map('map-sim', {
+        zoomControl: true,
+        attributionControl: true
+      }).setView([-26.2041, 28.0473], 12); // Johannesburg default
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+      window.leafletMap = map;
+    });
+  </script>
+
+  <div id="divForAdminDetails">
+    <button id="view-admin-details" class="modern-btn">View Admin Details</button>
+    <button id="edit-admin-details" class="modern-btn">Edit Admin Details</button>
+    <p id="admin-details"></p>
+    <form id="register-driver">
+      <h2>Register Driver</h2>
+      <input class="modal-input" type="text" id="driverName" placeholder="Driver Name" required>
+      <input class="modal-input" type="text" id="driverContacts" placeholder="Driver Contacts" required>
+      <input class="modal-input" type="text" id="driverLicense" placeholder="Vehicle Number" required>
+      <button type="submit" class="modern-btn">Register Driver</button>
+      <p id="driver-error-message" class="error-message"></p>
+    </form>
+  </div>
+
+  <script>
+    // Toggle slide menu
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuBtn = document.getElementById('menuToggleBtn');
+      const menu = document.getElementById('indexMenu');
+      if (menuBtn && menu) {
+        menuBtn.addEventListener('click', function () {
+          menu.classList.toggle('menu-open');
+        });
+      }
+    });
+
+    // Responsive greeting with typing effect
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return 'Good morning, Admin!';
+      if (hour < 18) return 'Good afternoon, Admin!';
+      return 'Good evening, Admin!';
+    }
+    function typeGreeting(text, elementId, speed = 60) {
+      const el = document.getElementById(elementId);
+      el.textContent = '';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+    // We're using the profile component greeting instead
+    // typeGreeting(getGreeting(), 'greeting');
+
+    // Admin details demo logic
+    const adminDetails = {
+      name: "James Ndlangamandla",
+      email: "admin@mageza.com",
+      phone: "+27 123 456 789"
+    };
+    document.getElementById('view-admin-details').onclick = function() {
+      document.getElementById('admin-details').textContent =
+        `Name: ${adminDetails.name}, Email: ${adminDetails.email}, Phone: ${adminDetails.phone}`;
+    };
+    document.getElementById('edit-admin-details').onclick = function() {
+      prompt("Edit functionality coming soon!");
+    };
+    document.getElementById('delete-admin-details').onclick = function() {
+      if (confirm("Are you sure you want to delete admin details?")) {
+        document.getElementById('admin-details').textContent = "Admin details deleted.";
+      }
+    };
+
+    // Register driver logic (localStorage demo)
+    document.getElementById('register-driver').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('driverName').value.trim();
+      const contacts = document.getElementById('driverContacts').value.trim();
+      const license = document.getElementById('driverLicense').value.trim();
+      if (!name || !contacts || !license) {
+        document.getElementById('driver-error-message').textContent = "All fields are required.";
+        return;
+      }
+      let drivers = JSON.parse(localStorage.getItem('magezaDrivers') || '[]');
+      drivers.push({ name, contacts, license });
+      localStorage.setItem('magezaDrivers', JSON.stringify(drivers));
+      document.getElementById('driver-error-message').textContent = "Driver registered!";
+      this.reset();
+    });
+  </script>
+
+  <footer>
+    <p>&copy; 2025 Mageza App. All rights reserved.</p>
+    <p>Developed by the Mageza team.</p>
+  </footer>
+</body>
+</html>
