@@ -600,7 +600,7 @@ footer {
 }
 
 .profile-container ul li {
-  background: #7b7f8d;
+  background: #019ffa;
   border-radius: 18px 18px 0 0;
   box-shadow: 0 4px 16px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(25, 118, 210, 0.08);
   padding: 1em 2.2em 0.8em 2.2em;
@@ -624,15 +624,15 @@ footer {
   background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
   color: #fff;
   transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.18), 0 2px 8px rgba(25, 118, 210, 0.10);
-  border-bottom: 3px solid #8a98a0;
+  box-shadow: 0 8px 32px rgba(2, 127, 252, 0.705), 0 2px 8px rgba(4, 165, 240, 0.904);
+  border-bottom: 3px solid #ff7b00;
 }
 
 .profile-container ul li img {
   margin-right: 0.7em;
   border-radius: 10px;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.10);
+  background: #d7fd01e8;
+  box-shadow: 0 1px 4px rgb(253, 136, 3);
   padding: 4px;
   width: 2em;
   height: 2em;
@@ -657,7 +657,7 @@ footer {
   border-radius: 24px;
   overflow: hidden;
   /* Ensure Leaflet controls and tiles are rounded */
-  background: #f8f9fa;
+  background: #fda502;
   position: relative;
   align-content: center;;
 }

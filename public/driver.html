@@ -24,7 +24,7 @@
     
     /* Profile Component Styles */
     .profile-picture-component {
-      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #0177d8 100%);
       border-radius: 16px;
       padding: 1.5rem;
       margin: 1rem auto;
@@ -42,12 +42,12 @@
 
     .profile-avatar-container {
       position: relative;
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       overflow: hidden;
-      border: 3px solid #1976d2;
-      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+      border: 3px solid #00d9ff;
+      box-shadow: 0 2px 8px rgba(1, 90, 555, 0.89);
     }
 
     .profile-avatar {
@@ -58,17 +58,17 @@
     }
 
     .profile-avatar:hover {
-      transform: scale(1.05);
+      transform: scale(1.5);
     }
 
     .profile-upload-overlay {
       position: absolute;
       bottom: 0;
       right: 0;
-      background: rgba(25, 118, 210, 0.9);
+      background: rgba(3, 212, 240, 0.925);
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 35px;
+      height: 35px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -102,14 +102,14 @@
     }
 
     .profile-name {
-      color: #2c3e50;
+      color: #052cdab7;
       font-size: 1rem;
       font-weight: 500;
       margin: 0 0 0.25rem 0;
     }
 
     .profile-type {
-      color: #6c757d;
+      color: #056380dc;
       font-size: 0.9rem;
       margin: 0;
       text-transform: capitalize;
@@ -170,9 +170,9 @@
       </div>
     </div>
     <div class="profile-info">
-      <h2 id="profileGreeting" class="profile-greeting">Welcome!</h2>
-      <p id="profileName" class="profile-name">Driver Name</p>
-      <p id="profileType" class="profile-type">Driver</p>
+      <h2 id="profileGreeting" class="profile-greeting"></h2>
+      <p id="profileName" class="profile-name"></p>
+      <p id="profileType" class="profile-type"></p>
     </div>
   </div>
   
@@ -200,7 +200,7 @@ function loadProfileData() {
     }
     
     if (userData.userType) {
-      document.getElementById('profileType').textContent = userData.userType;
+      document.getElementById('profileType').textContent = "Welcome to your dashboard where everything is easy";
     }
     
     // Set greeting based on time of day
