@@ -3,42 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <title>Driver Profile - Mageza App</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('map').setView([-26.2041, 28.0473], 12); // Johannesburg default
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+        window.leafletMap = map;
+      });
+    </script>
   <style>
-    #map-sim { 
-      width: 100%; 
-      width: 100%; 
-      height: 260px; 
-      border-radius: 14px; 
-      margin: 1.2em 0; 
-      max-width: 950px; 
-      border: 1px solid #ddd;
-      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.13), 0 1.5px 8px 0 rgba(0,0,0,0.08);
-      overflow: hidden;
-      background: #fff;
-      position: relative;
-      z-index: 10;
-      height: 260px; 
-      border-radius: 14px; 
-      margin: 1.2em 0; 
-      max-width: 950px; 
-      border: 1px solid #ddd;
-      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.13), 0 1.5px 8px 0 rgba(0,0,0,0.08);
-      overflow: hidden;
-      background: #fff;
-      position: relative;
-      z-index: 10;
-    }
-    
-    /* Ensure map tiles are visible */
-    #map-sim .leaflet-container {
-      border-radius: 16px;
-      background: #f8f9fa;
-    }
-    
     /* Custom marker styles for better visibility */
     .sim-marker {
       font-weight: bold;
@@ -265,7 +245,72 @@
   <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
 
 
-<script>
+
+
+  <div class="profile-container">
+    <h1>Driver Dashboard</h1>
+    <p>Check your assigned routes, schedules, and notifications here.</p>
+    <ul>
+      <li>
+        <img src="route.png" alt="Routes" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+        <a href="routes-frequent-sujgestions.html">My Routes</a>
+      </li>
+      <li>
+        <img src="schedule.png" alt="Schedule" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+        <a id="routePlannerModalTemplate" onclick="openMapModal()">Schedule</a>
+      </li>
+
+      <li>
+        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+        <a href="driver-spaces.html">Driver Spaces</a>
+      </li>
+
+      <li>
+        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+        <a href="driver-spaces.html">Request Break</a>
+      </li>
+
+    </ul>
+    <button class="modern-btn" onclick="window.location.href='index.html'">Logout</button>
+    <hr/>
+    
+    <!-- Emergency Location Reporting Section -->
+    <div class="emergency-report" onclick="reportEmergencyLocation()">
+      🚨 EMERGENCY LOCATION REPORT 🚨
+    </div>
+    
+    <div id="locationInfo" class="location-info" style="display: none;">
+      <h3>Current Location Reported</h3>
+      <div id="locationCoordinates" class="location-coordinates"></div>
+      <div id="locationTimestamp" class="location-timestamp"></div>
+      <button class="modern-btn" onclick="copyLocationToClipboard()">Copy Coordinates</button>
+    </div>
+    
+    <h2>Passenger Map (Prototype)</h2>
+    <div id="map" class="map-rounded"></div>
+
+
+    <div class="sim-btn-grid glass-blue-panel scatter-panel">
+      <button class="modern-btn dj-btn" id="simShowPassengers">Show Passengers</button>
+      <button class="modern-btn dj-btn" id="simShowInTaxis">Show In-Taxi Passengers</button>
+      <button class="modern-btn dj-btn" id="simShowDriver">Show Driver</button>
+      <button class="modern-btn dj-btn" id="simMoveDriver">Move Driver</button>
+      <button class="modern-btn dj-btn" id="simPickup">Pick Up Nearby Passenger</button>
+      <button class="modern-btn dj-btn" id="simRequestPickup">Request Pickup</button>
+      <button class="modern-btn dj-btn" id="simShowRequests">Show Pickup Requests</button>
+      <button class="modern-btn dj-btn" id="simAcceptRequest">Accept Pickup Request</button>
+      <button class="modern-btn dj-btn" id="simAnimate">Auto Animate</button>
+    </div>
+    <p id="mapStatus"></p>
+    <ul id="inTaxiList"></ul>
+    <ul id="pickupRequests"></ul>
+  <footer style="z-index: 50;">
+    <p>&copy; 2025 Mageza App. All rights reserved.</p>
+    <p>by the Mageza team.</p>
+  </footer>
+  </div>
+  
+  <script>
 // Profile component functionality for driver page
 function loadProfileData() {
   try {
@@ -335,68 +380,6 @@ document.addEventListener('DOMContentLoaded', function() {
   loadProfileData();
 });
 </script>
-
-  <div class="profile-container">
-    <h1>Driver Dashboard</h1>
-    <p>Check your assigned routes, schedules, and notifications here.</p>
-    <ul>
-      <li>
-        <img src="route.png" alt="Routes" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="routes-frequent-sujgestions.html">My Routes</a>
-      </li>
-      <li>
-        <img src="schedule.png" alt="Schedule" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a id="routePlannerModalTemplate" onclick="openMapModal()">Schedule</a>
-      </li>
-
-      <li>
-        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="driver-spaces.html">Driver Spaces</a>
-      </li>
-
-      <li>
-        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="driver-spaces.html">Request Break</a>
-      </li>
-
-    </ul>
-    <button class="modern-btn" onclick="window.location.href='index.html'">Logout</button>
-    <hr/>
-    
-    <!-- Emergency Location Reporting Section -->
-    <div class="emergency-report" onclick="reportEmergencyLocation()">
-      🚨 EMERGENCY LOCATION REPORT 🚨
-    </div>
-    
-    <div id="locationInfo" class="location-info" style="display: none;">
-      <h3>Current Location Reported</h3>
-      <div id="locationCoordinates" class="location-coordinates"></div>
-      <div id="locationTimestamp" class="location-timestamp"></div>
-      <button class="modern-btn" onclick="copyLocationToClipboard()">Copy Coordinates</button>
-    </div>
-    
-    <h2>Passenger Map (Prototype)</h2>
-    <div id="map-sim"></div>
-    
-    <div class="sim-btn-grid glass-blue-panel scatter-panel">
-      <button class="modern-btn dj-btn" id="simShowPassengers">Show Passengers</button>
-      <button class="modern-btn dj-btn" id="simShowInTaxis">Show In-Taxi Passengers</button>
-      <button class="modern-btn dj-btn" id="simShowDriver">Show Driver</button>
-      <button class="modern-btn dj-btn" id="simMoveDriver">Move Driver</button>
-      <button class="modern-btn dj-btn" id="simPickup">Pick Up Nearby Passenger</button>
-      <button class="modern-btn dj-btn" id="simRequestPickup">Request Pickup</button>
-      <button class="modern-btn dj-btn" id="simShowRequests">Show Pickup Requests</button>
-      <button class="modern-btn dj-btn" id="simAcceptRequest">Accept Pickup Request</button>
-      <button class="modern-btn dj-btn" id="simAnimate">Auto Animate</button>
-    </div>
-    <p id="mapStatus"></p>
-    <ul id="inTaxiList"></ul>
-    <ul id="pickupRequests"></ul>
-  <footer style="z-index: 50;">
-    <p>&copy; 2025 Mageza App. All rights reserved.</p>
-    <p>by the Mageza team.</p>
-  </footer>
-  </div>
   <script>
     // --- Simple Map Simulation for Prototype ---
     const mapSim = document.getElementById('map-sim');
@@ -767,32 +750,3 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('No coordinates available to copy.');
       }
     }
-    
-    // Ensure map is properly visible on load and resize
-    function ensureMapVisibility() {
-      if (window.leafletMap) {
-        setTimeout(() => {
-          window.leafletMap.invalidateSize();
-          window.leafletMap.setView([-26.2041, 28.0473], 12);
-        }, 100);
-      }
-    }
-    
-    // Initialize map with better visibility
-    document.addEventListener('DOMContentLoaded', function() {
-      var map = L.map('map-sim').setView([-26.2041, 28.0473], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-      window.leafletMap = map;
-      
-      // Setup button event listeners
-      setupButtonListeners();
-      
-      // Ensure map visibility after load
-      ensureMapVisibility();
-      
-      // Handle window resize for map visibility
-      window.addEventListener('resize', ensureMapVisibility);
-    });

@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passenger Profile</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('map').setView([-26.2041, 28.0473], 12); // Johannesburg default
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+        window.leafletMap = map;
+      });
+    </script>
 </head>
 <body>
     <div class="profile-container">
@@ -81,7 +94,7 @@
     <div class="btn-map-wrap">
       <button class="modern-btn logout-btn" onclick="window.location.href='index.html'">Logout</button>
       <link rel="stylesheet" href="leaflet.css">
-      <div id="map-sim" style="width:100%;height:400px;position:relative;border:1px solid #aaa;overflow:hidden;margin-bottom:1em;"></div>
+      <div id="map" style="width:100%;height:400px;position:relative;border:1px solid #aaa;overflow:hidden;margin-bottom:1em;"></div>
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script>
         // Initialize Leaflet map
