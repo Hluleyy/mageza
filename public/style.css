@@ -142,6 +142,7 @@ body {
   min-height: 100vh;
   font-family: 'Segoe UI', Arial, sans-serif;
   position: relative;
+  overflow-x: hidden;
 }
 body::before {
   content: '';
@@ -295,6 +296,7 @@ body {
   text-align: center;
   background-image: radial-gradient(circle 248px at center, #16d9e3 0%, #30c7ec 47%, #46aef7 100%);
 }
+
 
 /* Sliding menu styles */
 #indexMenu {
@@ -538,6 +540,7 @@ footer {
   justify-content: center;
   gap: 2em;
   margin: 1.5em 0 1.5em 0;
+  flex-direction: row;
 }
 .action-link {
   display: flex;
@@ -715,4 +718,5 @@ footer {
   margin: 5rem;
   padding: 5vh;
   font-size: small;
+  flex-direction: row;
 }
