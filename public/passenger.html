@@ -9,13 +9,24 @@
 </head>
 <body>
     <div class="profile-container">
-      <div class="profile-pic-wrapper" style="  -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0.5) 50%);
-  mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0.5) 50%);">
-        <img src="mageza-logo.png" alt="Profile Picture" />
+      <div class="profile-avatar-container">
+      <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
+        <div class="profile-upload-overlay">
+          <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="greeting-responsive">
-        <h1 id="greeting"></h1>
+      <div class="profile-info">
+        <h2 id="profileGreeting" class="profile-greeting">Welcome!</h2>
+        <p id="profileName" class="profile-name">Passenger Name</p>
       </div>
+    </div>
+    
+    <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
+    </div>
       <p>Find routes, book rides, and view your ride history here.</p>
     <div class="passenger-action-links">
       <a href="#" title="Find Route" class="action-link">
@@ -131,6 +142,21 @@
         .logout-btn { width: 100%; margin-top: 0.5em; align-self: stretch; }
       }
     </style>
+    <script>
+
+      function handleProfileUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('profileAvatar').src = e.target.result;
+            // Optionally save to localStorage
+            localStorage.setItem('profileAvatar', e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    </script>
 <script type="module">
   import { getGreeting, typeGreeting, setupPassengerSim } from '../src/passenger-app.js';
   window.addEventListener('DOMContentLoaded', function() {
