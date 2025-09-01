@@ -218,61 +218,60 @@
         font-size: 1rem;
       }
     }
-  </style>
-</head>
-<body>
+    </style>
+  </head>
+  <body>
 
-<!-- Profile Picture Component -->
-<div class="profile-picture-component">
-  <div class="profile-header">
-    <div class="profile-avatar-container">
-      <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
-      <div class="profile-upload-overlay">
-        <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 5v14M5 12h14"/>
-          </svg>
-        </button>
+      <!-- Profile Picture Component -->
+      <div class="profile-picture-component">
+        <div class="profile-header">
+          <div class="profile-avatar-container">
+            <img id="profileAvatar" src="mageza-logo.png" alt="Profile Picture" class="profile-avatar">
+          <div class="profile-upload-overlay">
+            <button class="upload-btn" onclick="document.getElementById('profileUploadInput').click()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      <div class="profile-info">
+        <h2 id="profileGreeting" class="profile-greeting"></h2>
+        <p id="profileName" class="profile-name"></p>
+        <p id="profileType" class="profile-type"></p>
       </div>
     </div>
-    <div class="profile-info">
-      <h2 id="profileGreeting" class="profile-greeting"></h2>
-      <p id="profileName" class="profile-name"></p>
-      <p id="profileType" class="profile-type"></p>
+
+    <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
+
+    <div class="profile-container">
+      <h1>Driver Dashboard</h1>
+      <p>Check your assigned routes, schedules, and notifications here.</p>
+      <div class="driver-buttons">
+      <ul>
+        <li>
+          <img src="route.png" alt="Routes" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+          <a href="routes-frequent-sujgestions.html">My Routes</a>
+        </li>
+        <li>
+          <img src="schedule.png" alt="Schedule" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+          <a id="routePlannerModalTemplate" onclick="openMapModal()">Schedule</a>
+        </li>
+
+        <li>
+          <img src="../public/icons/car.svg" alt="Space-Boy" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+          <a href="driver-spaces.html">Driver Spaces</a>
+        </li>
+
+        <li>
+          <img src="../public/icons/user.svg" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
+          <a href="driver-spaces.html">Space Boy</a>
+        </li>
+
+      </ul>
     </div>
-  </div>
-  
-  <input type="file" id="profileUploadInput" style="display:none" accept="image/*" onchange="handleProfileUpload(event)">
-
-
-
-
-  <div class="profile-container">
-    <h1>Driver Dashboard</h1>
-    <p>Check your assigned routes, schedules, and notifications here.</p>
-    <ul>
-      <li>
-        <img src="route.png" alt="Routes" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="routes-frequent-sujgestions.html">My Routes</a>
-      </li>
-      <li>
-        <img src="schedule.png" alt="Schedule" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a id="routePlannerModalTemplate" onclick="openMapModal()">Schedule</a>
-      </li>
-
-      <li>
-        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="driver-spaces.html">Driver Spaces</a>
-      </li>
-
-      <li>
-        <img src="notification.png" alt="Notifications" style="height:1.5em;width:1.5em;vertical-align:middle;margin-right:0.5em;">
-        <a href="driver-spaces.html">Request Break</a>
-      </li>
-
-    </ul>
-    <button class="modern-btn" onclick="window.location.href='index.html'">Logout</button>
-    <hr/>
+      <button class="modern-btn" onclick="window.location.href='index.html'">Logout</button>
+      <hr/>
     
     <!-- Emergency Location Reporting Section -->
     <div class="emergency-report" onclick="reportEmergencyLocation()">
@@ -301,186 +300,182 @@
       <button class="modern-btn dj-btn" id="simAcceptRequest">Accept Pickup Request</button>
       <button class="modern-btn dj-btn" id="simAnimate">Auto Animate</button>
     </div>
-    <p id="mapStatus"></p>
-    <ul id="inTaxiList"></ul>
-    <ul id="pickupRequests"></ul>
-  <footer style="z-index: 50;">
-    <p>&copy; 2025 Mageza App. All rights reserved.</p>
-    <p>by the Mageza team.</p>
-  </footer>
-  </div>
-  
-  <script>
-// Profile component functionality for driver page
-function loadProfileData() {
-  try {
+      <p id="mapStatus"></p>
+      <ul id="inTaxiList"></ul>
+      <ul id="pickupRequests"></ul>
+    </div>
+
+    <script>
+    // Profile component functionality for driver page
+    function loadProfileData() {
+      try {
     // Get current user from localStorage or session
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const users = JSON.parse(localStorage.getItem('magezaUsers') || '[]');
     
-    let userData = currentUser;
-    if (!userData.name && users.length > 0) {
+      let userData = currentUser;
+      if (!userData.name && users.length > 0) {
       // Find a driver user
-      const driverUser = users.find(u => u.userType === 'Driver') || users[0] || {};
-      userData = driverUser;
-    }
+        const driverUser = users.find(u => u.userType === 'Driver') || users[0] || {};
+        userData = driverUser;
+      }
     
     // Update profile information
-    if (userData.name) {
-      document.getElementById('profileName').textContent = userData.name;
-    }
+      if (userData.name) {
+        document.getElementById('profileName').textContent = userData.name;
+      }
     
-    if (userData.userType) {
-      document.getElementById('profileType').textContent = "Welcome to your dashboard where everything is easy";
-    }
+      if (userData.userType) {
+        document.getElementById('profileType').textContent = "Welcome to your dashboard where everything is easy";
+      }
     
     // Set greeting based on time of day
-    const hour = new Date().getHours();
-    let greeting = 'Welcome';
-    if (hour < 12) greeting = 'Good morning';
-    else if (hour < 18) greeting = 'Good afternoon';
-    else greeting = 'Good evening';
+      const hour = new Date().getHours();
+      let greeting = 'Welcome';
+      if (hour < 12) greeting = 'Good morning';
+      else if (hour < 18) greeting = 'Good afternoon';
+      else greeting = 'Good evening';
     
-    if (userData.name) {
-      document.getElementById('profileGreeting').textContent = `${greeting}, ${userData.name.split(' ')[0]}`;
-    } else {
-      document.getElementById('profileGreeting').textContent = `${greeting}`;
-    }
+      if (userData.name) {
+        document.getElementById('profileGreeting').textContent = `${greeting}, ${userData.name.split(' ')[0]}`;
+      } else {
+        document.getElementById('profileGreeting').textContent = `${greeting}`;
+      }
     
     // Load profile picture if available
-    const profilePic = localStorage.getItem('profilePicture');
-    if (profilePic) {
-      document.getElementById('profileAvatar').src = profilePic;
+      const profilePic = localStorage.getItem('profilePicture');
+      if (profilePic) {
+        document.getElementById('profileAvatar').src = profilePic;
+      }
+    
+      } catch (error) {
+        console.error('Error loading profile data:', error);
+      }
     }
-    
-  } catch (error) {
-    console.error('Error loading profile data:', error);
-  }
-}
 
-function handleProfileUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      // Update profile picture
-      document.getElementById('profileAvatar').src = e.target.result;
+    function handleProfileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+        // Update profile picture
+        document.getElementById('profileAvatar').src = e.target.result;
       
-      // Save to localStorage
-      localStorage.setItem('profilePicture', e.target.result);
+        // Save to localStorage
+        localStorage.setItem('profilePicture', e.target.result);
       
-      alert('Profile picture updated successfully!');
-    };
-    reader.readAsDataURL(file);
-  }
-}
+        alert('Profile picture updated successfully!');
+      };
+      reader.readAsDataURL(file);
+    }
+    }
 
-// Initialize profile component
-document.addEventListener('DOMContentLoaded', function() {
-  loadProfileData();
-});
-</script>
-  <script>
-    // --- Simple Map Simulation for Prototype ---
-    const mapSim = document.getElementById('map-sim');
+      // Initialize profile component
+          document.addEventListener('DOMContentLoaded', function() {
+            loadProfileData();
+          });
+      </script>
+    <script>
+      // --- Simple Map Simulation for Prototype ---
+      const mapSim = document.getElementById('map-sim');
 
-    let simMarkers = [];
-    let passengers = [];
-    let inTaxiPassengers = [];
-    let driver = null;
-    let animateInterval = null;
-    let pickupRequestsArr = [];
-    let emergencyMarker = null;
+      let simMarkers = [];
+      let passengers = [];
+      let inTaxiPassengers = [];
+      let driver = null;
+      let animateInterval = null;
+      let pickupRequestsArr = [];
+      let emergencyMarker = null;
     
-    // Initialize Leaflet map
-    document.addEventListener('DOMContentLoaded', function() {
-      var map = L.map('map-sim').setView([-26.2041, 28.0473], 12); // Johannesburg default
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-      window.leafletMap = map;
+      // Initialize Leaflet map
+      document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('map-sim').setView([-26.2041, 28.0473], 12); // Johannesburg default
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+       window.leafletMap = map;
       
       // Setup button event listeners
-      setupButtonListeners();
-    });
+        setupButtonListeners();
+        });
     
-    function setupButtonListeners() {
+      function setupButtonListeners() {
       // Move driver in a realistic direction
-      document.getElementById('simMoveDriver').onclick = function() {
-        if (!driver) { document.getElementById('mapStatus').textContent = 'Show driver first!'; return; }
-        // Simulate a random heading and distance (max ~500m per move)
-        let heading = Math.random() * 2 * Math.PI;
-        let distance = Math.random() * 0.005; // ~0-500m
-        let dLat = Math.cos(heading) * distance;
-        let dLng = Math.sin(heading) * distance / Math.cos(driver.lat * Math.PI/180);
-        driver.lat += dLat;
-        driver.lng += dLng;
-        redrawAll();
-        window.leafletMap.setView([driver.lat, driver.lng], window.leafletMap.getZoom());
-        document.getElementById('mapStatus').textContent = 'Driver moved!';
-      };
+        document.getElementById('simMoveDriver').onclick = function() {
+          if (!driver) { document.getElementById('mapStatus').textContent = 'Show driver first!'; return; }
+          // Simulate a random heading and distance (max ~500m per move)
+          let heading = Math.random() * 2 * Math.PI;
+          let distance = Math.random() * 0.005; // ~0-500m
+          let dLat = Math.cos(heading) * distance;
+          let dLng = Math.sin(heading) * distance / Math.cos(driver.lat * Math.PI/180);
+          driver.lat += dLat;
+          driver.lng += dLng;
+          redrawAll();
+          window.leafletMap.setView([driver.lat, driver.lng], window.leafletMap.getZoom());
+          document.getElementById('mapStatus').textContent = 'Driver moved!';
+        };
       
       // Passengers request pickup (randomly select some not in taxi)
-      document.getElementById('simRequestPickup').onclick = function() {
-        pickupRequestsArr = [];
-        passengers.forEach(p => {
-          if (!p.inTaxi && Math.random() < 0.5) {
-            pickupRequestsArr.push(p);
-          }
-        });
-        updatePickupRequests();
-        document.getElementById('mapStatus').textContent = pickupRequestsArr.length ? 'Pickup requests sent!' : 'No requests.';
-      };
+        document.getElementById('simRequestPickup').onclick = function() {
+          pickupRequestsArr = [];
+          passengers.forEach(p => {
+            if (!p.inTaxi && Math.random() < 0.5) {
+              pickupRequestsArr.push(p);
+            }
+          });
+          updatePickupRequests();
+          document.getElementById('mapStatus').textContent = pickupRequestsArr.length ? 'Pickup requests sent!' : 'No requests.';
+        };
 
       // Show pickup requests
-      document.getElementById('simShowRequests').onclick = function() {
-        updatePickupRequests();
-        document.getElementById('mapStatus').textContent = 'Showing pickup requests.';
-      };
+        document.getElementById('simShowRequests').onclick = function() {
+          updatePickupRequests();
+          document.getElementById('mapStatus').textContent = 'Showing pickup requests.';
+        };
 
       // Accept a pickup request (pick the closest one)
-      document.getElementById('simAcceptRequest').onclick = function() {
-        if (!driver || pickupRequestsArr.length === 0) {
-          document.getElementById('mapStatus').textContent = 'No driver or no requests.';
-          return;
-        }
+        document.getElementById('simAcceptRequest').onclick = function() {
+          if (!driver || pickupRequestsArr.length === 0) {
+            document.getElementById('mapStatus').textContent = 'No driver or no requests.';
+            return;
+          }
         // Find closest request using haversine distance
-        let minDist = Infinity, minP = null;
-        pickupRequestsArr.forEach(p => {
-          let R = 6371e3; // meters
-          let dLat = (p.lat - driver.lat) * Math.PI/180;
-          let dLng = (p.lng - driver.lng) * Math.PI/180;
-          let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(driver.lat * Math.PI/180) * Math.cos(p.lat * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
-          let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-          let dist = R * c;
-          if (dist < minDist) { minDist = dist; minP = p; }
-        });
-        if (minP) {
-          minP.inTaxi = true;
-          inTaxiPassengers.push(minP);
-          pickupRequestsArr = pickupRequestsArr.filter(p => p.id !== minP.id);
-          redrawAll();
-          updateInTaxiList();
-          updatePickupRequests();
-          document.getElementById('mapStatus').textContent = `Accepted pickup for ${minP.id.toUpperCase()}`;
-        }
-      };
+          let minDist = Infinity, minP = null;
+          pickupRequestsArr.forEach(p => {
+            let R = 6371e3; // meters
+            let dLat = (p.lat - driver.lat) * Math.PI/180;
+            let dLng = (p.lng - driver.lng) * Math.PI/180;
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(driver.lat * Math.PI/180) * Math.cos(p.lat * Math.PI/180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            let dist = R * c;
+            if (dist < minDist) { minDist = dist; minP = p; }
+          });
+          if (minP) {
+            minP.inTaxi = true;
+            inTaxiPassengers.push(minP);
+            pickupRequestsArr = pickupRequestsArr.filter(p => p.id !== minP.id);
+            redrawAll();
+            updateInTaxiList();
+            updatePickupRequests();
+            document.getElementById('mapStatus').textContent = `Accepted pickup for ${minP.id.toUpperCase()}`;
+          }
+        };
       
       // Animate movement for simulation purposes
-      document.getElementById('simAnimate').onclick = function() {
-        if (animateInterval) { 
-          clearInterval(animateInterval); 
-          animateInterval = null; 
-          this.textContent = 'Auto Animate'; 
-          return; 
-        }
-        this.textContent = 'Stop Animation';
-        animateInterval = setInterval(() => {
-          movePassengers();
-          redrawAll();
-        }, 1200);
-      };
+        document.getElementById('simAnimate').onclick = function() {
+          if (animateInterval) { 
+            clearInterval(animateInterval); 
+            animateInterval = null; 
+            this.textContent = 'Auto Animate'; 
+            return; 
+          }
+          this.textContent = 'Stop Animation';
+          animateInterval = setInterval(() => {
+            movePassengers();
+            redrawAll();
+          }, 1200);
+        };
     }
 
     function updatePickupRequests() {
@@ -750,3 +745,9 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('No coordinates available to copy.');
       }
     }
+    <footer style="z-index: 50;">
+      <p>&copy; 2025 Mageza App. All rights reserved.</p>
+      <p>by the Mageza team.</p>
+    </footer>
+  </body>
+</html>

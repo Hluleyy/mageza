@@ -194,13 +194,14 @@ body::before {
   height: 90px;
   border-radius: 50%;
   border: 3px solid #1976d2;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.13);
-  background: #a3c8ff;
+  box-shadow: 0 2px 8px rgba(2, 32, 61, 0.438);
+  background: #fffffffb;
   object-fit: cover;
   transition: transform 0.2s;
+  z-index: 50;
 }
 .profile-pic-wrapper img:hover {
-  transform: scale(1.07) rotate(-2deg);
+  transform: scale(3.07) rotate(-360deg);
 }
 .btnInput, .modern-btn, #divForAdminDetails button, #register-driver button[type="submit"] {
   display: block;
@@ -242,11 +243,11 @@ body::before {
   width: 90%;
   margin: 0.5em auto;
   padding: 0.6em 1em;
-  border: 1.5px solid #b3c6e0;
+  border: 1.5px solid #2f5486;
   border-radius: 10px;
   font-size: 1em;
   display: block;
-  background: #f5f7fa;
+  background: #96befa;
   transition: border 0.2s;
 }
 #register-driver input:focus {
@@ -266,6 +267,7 @@ footer {
   font-size: 1em;
   margin-top: 2em;
   padding-bottom: 1.5em;
+  flex-direction: column;
 }
 @media (max-width: 600px) {
   .greeting-responsive h1 { font-size: 1.3em; }
@@ -469,7 +471,9 @@ select {
 
 
 .lwr-link {
-  font-size: 12px;
+  margin-top: 7rem;
+  font-size: 1.15rem;
+  text-decoration: none;
 }
 
 button {
@@ -620,6 +624,7 @@ footer {
   border-bottom: 3px solid #1976d2;
   position: relative;
   top: 0;
+  flex-direction: row;
 }
 
 .profile-container ul li:hover,
@@ -633,14 +638,15 @@ footer {
 
 .profile-container ul li img {
   margin-right: 0.7em;
-  border-radius: 10px;
+  border-radius: 30px;
   background: #d7fd01e8;
   box-shadow: 0 1px 4px rgb(253, 136, 3);
   padding: 4px;
-  width: 2em;
+  width: 6em;
   height: 2em;
   object-fit: cover;
   transition: transform 0.18s;
+  line-gap-override: 5px;
 }
 
 .profile-container ul li a {
@@ -695,7 +701,7 @@ footer {
 
 .modal-input::placeholder {
   max-width: 100%;
-  color: #b3c6e0;
+  color: #1467db;
   opacity: 0.8;
 }
 .modal-input.error {
@@ -718,7 +724,7 @@ footer {
   margin: 5rem;
   padding: 5vh;
   font-size: small;
-  flex-direction: row;
+  flex-direction: block;
 }
 
 /* profile container*/
@@ -760,4 +766,9 @@ footer {
 
     .profile-upload-overlay:hover {
       background: rgba(21, 101, 192, 0.9);
+    }
+
+    .driver-buttons {
+      flex-flow: column;
+      -ms-flex-item-align: baseline;
     }
