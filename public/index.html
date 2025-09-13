@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1d4ed8">
   <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
 <script>window.LogRocket && window.LogRocket.init('upn2x5/mageza');</script>
   <meta charset="UTF-8" />
@@ -468,5 +470,14 @@
     <p>&copy; 2025 Mageza App. All rights reserved.</p>
     <p>Developed by the Mageza team.</p>
   </footer>  
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker registered', reg))
+        .catch(err => console.error('SW registration failed:', err));
+    });
+  }
+  </script>
 </body>
 </html>
