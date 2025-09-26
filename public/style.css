@@ -724,7 +724,7 @@ footer {
   margin: 5rem;
   padding: 5vh;
   font-size: small;
-  flex-direction: block;
+  flex-direction: inline;
 }
 
 /* profile container*/
