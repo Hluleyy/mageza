@@ -494,7 +494,7 @@ button:hover {
   background:hsl(from #f4d109 h s l)
 }
 
-footer {
+.footer {
   margin: 20vh;
   display: flex;
   flex-direction: inline;
