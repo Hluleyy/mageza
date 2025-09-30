@@ -496,6 +496,8 @@ button:hover {
 
 footer {
   margin: 20vh;
+  display: flex;
+  flex-direction: inline;
 }
 
 
