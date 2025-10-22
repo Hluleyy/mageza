@@ -1,8 +1,8 @@
+// Splash screen
 setTimeout(() => {
   document.getElementById('splash').style.display = 'none';
   document.getElementById('app').style.display = 'block';
 }, 3000);
-
 
 // Admin dB //
 let icon = document.querySelector(".menu_icon");
@@ -61,31 +61,61 @@ if (registerForm) {
 
 // (Removed duplicate getGreeting and typeGreeting function definitions)
 
-      // Responsive greeting
-    function getGreeting() {
-      const hour = new Date().getHours();
-      if (hour < 12) return 'Good morning, Que Marshall!';
-      if (hour < 18) return 'Good afternoon, Que Marshall!';
-      return 'Good evening, Que Marshall!';
-    }
-  // Responsive greeting with typing letter by letter effect
-  function showTypedGreeting(elementId, speed = 60) {
-    const hour = new Date().getHours();
-    let greeting;
-    if (hour < 12) greeting = 'Good morning, Que Marshall!';
-    else if (hour < 18) greeting = 'Good afternoon, Que Marshall!';
-    else greeting = 'Good evening, Que Marshall!';
+// Responsive greeting
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning, Que Marshall!';
+  if (hour < 18) return 'Good afternoon, Que Marshall!';
+  return 'Good evening, Que Marshall!';
+}
 
-    const el = document.getElementById(elementId);
-    el.textContent = '';
-    let i = 0;
-    function type() {
-      if (i < greeting.length) {
-        el.textContent += greeting[i];
-        i++;
-        setTimeout(type, speed);
-      }
+// Responsive greeting with typing letter by letter effect
+function showTypedGreeting(elementId, speed = 60) {
+  const hour = new Date().getHours();
+  let greeting;
+  if (hour < 12) greeting = 'Good morning, Que Marshall!';
+  else if (hour < 18) greeting = 'Good afternoon, Que Marshall!';
+  else greeting = 'Good evening, Que Marshall!';
+
+  const el = document.getElementById(elementId);
+  el.textContent = '';
+  let i = 0;
+  function type() {
+    if (i < greeting.length) {
+      el.textContent += greeting[i];
+      i++;
+      setTimeout(type, speed);
     }
-    type();
   }
-  showTypedGreeting('greeting');
+  type();
+}
+showTypedGreeting('greeting');
+
+/* ==========================================================
+   🔹 Added: Modal Button Logic (reaction modal)
+   ========================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('myModal');
+  const openModalBtn = document.getElementById('openModalBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const closeButton = document.querySelector('.close-button');
+  const overlay = document.querySelector('.modal-overlay');
+
+  // Exit if modal not found (prevents errors)
+  if (!modal || !openModalBtn) return;
+
+  // Open modal
+  openModalBtn.addEventListener('click', () => {
+    modal.classList.add('show');
+    openModalBtn.classList.add('clicked');
+  });
+
+  // Close modal function
+  const closeModalReaction = () => modal.classList.remove('show');
+
+  // Close via buttons or overlay
+  closeModalBtn?.addEventListener('click', closeModalReaction);
+  closeButton?.addEventListener('click', closeModalReaction);
+  overlay?.addEventListener('click', closeModalReaction);
+}); 
